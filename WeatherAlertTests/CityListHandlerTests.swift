@@ -12,18 +12,14 @@ import XCTest
 
 class CityListHandlerTests: XCTestCase {
     
-    var cityList: CityList?
+    // It would be good idea to use shared instance across the app as we need to load cities list only once
+    let cityList: CityList? = CityList.sharedInstance
     
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        cityList = CityList(fileName: "city.list", newLineDelimited: true)
         // city list will be nil if it failed to load file
         XCTAssertNotNil(cityList, "CityList failed to load from json file")
-        
-        let cities = cityList?.cities
-        // at this point cities shouldn't be loaded
-        XCTAssertNil(cities, "Cities should only be initialized when requested")
     }
     
     override func tearDown() {
