@@ -2,6 +2,7 @@ language: objective-c
 before_install:
  - rvm use system
  - sudo gem install cocoapods -v '1.0.0'
+ - pod repo update
 
 osx_image: xcode7
 xcode_workspace: WeatherAlert.xcworkspace
