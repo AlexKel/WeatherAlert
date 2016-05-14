@@ -54,7 +54,29 @@ class CityListHandlerTests: XCTestCase {
     }
     
     func testCityListSearch() {
+        cityList.search(name: "London") { cities in
+            XCTAssertNotNil(cities, "No cities found for test search 'London'")
+            XCTAssertGreaterThan(cities.count, 0, "There must be at least 1 city called London")
+        }
         
+        cityList.search(name: "Vilnius", country: "LT") { cities in
+            XCTAssertNotNil(cities, "No cities found for search 'Vilnius'")
+            XCTAssertEqual(cities.count, 1, "There should be 1 city named 'Vilnius'")
+        }
+        
+        // search for 'ilniu' should result in 'Vilnius', no other city matches this pattern
+        cityList.search(name: "ilniu") { cities in
+            XCTAssertNotNil(cities, "No cities found for search 'ilniu'")
+            XCTAssertEqual(cities.count, 1, "There should be 1 city named 'ilniu'")
+            let city = cities.first
+            XCTAssertEqual(city.name, "Vilnius")
+            XCTAssertEqual(city.country, "LT")
+            XCTAssertEqual(city.id, 593116)
+        }
+        
+        cityList.search(name: "some-random-stuff") { cities in
+            XCTAssertNil(cities, "Cities must be nil if no pattern found")
+        }
     }
     
     func testCityObjectMapping() {
