@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import WeatherAlert
+@testable import ObjectMapper
 
 class CityListHandlerTests: XCTestCase {
     
@@ -43,4 +44,17 @@ class CityListHandlerTests: XCTestCase {
         waitForExpectationsWithTimeout(5, handler: nil)
     }
     
+    func testCityObjectMapping() {
+        let testCityJSON = "{\"_id\":707860,\"name\":\"Hurzuf\",\"country\":\"UA\",\"coord\":{\"lon\":34.283333,\"lat\":44.549999}}"
+        let city = Mapper<City>().map(testCityJSON)
+        XCTAssertNotNil(city)
+        XCTAssertEqual(city?.id, 707860)
+        XCTAssertEqual(city?.name, "Hurzuf")
+        XCTAssertEqual(city?.country, "UA")
+        
+        let coord = city?.coord
+        XCTAssertEqual(coord?.lon, 34.283333)
+        XCTAssertEqual(coord?.lat, 44.549999)
+        
+    }
 }
