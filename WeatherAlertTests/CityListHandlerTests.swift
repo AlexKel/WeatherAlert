@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import WeatherAlert
 
 class CityListHandlerTests: XCTestCase {
     
@@ -26,14 +27,14 @@ class CityListHandlerTests: XCTestCase {
         // city list will be nil if it failed to load file
         XCTAssertNotNil(cityList, "City list must not be nil");
         // We'll be getting cities in the background thread, so we'll need to wait for that to finish.
-        let expectation = expectationWithDescription("Did load cities list");
+        let expectation = expectationWithDescription("Did load cities list")
         
         // Get all cities, just test that we can get cities
-        cityList.getAll { cities, error in
+        cityList.getAll { (cities: [City], error: NSError?) in
             // There shouldn't be any errors
-            XCTAssertNil(error, "There was an error getting cities from json file : \(error?)");
+            XCTAssertNil(error, "There was an error getting cities from json file : \(error)")
             // There must some cities in the file
-            XCTAssertGreaterThan(cities.count, 0, "There must be at least 1 city in the file");
+            XCTAssertGreaterThan(cities.count, 0, "There must be at least 1 city in the file")
             // Fullfill expectation
             expectation.fulfill()
         }
