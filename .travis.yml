@@ -1,0 +1,5 @@
+language: objective-c
+osx_image: xcode7.3
+xcode_project: WeatherAlert.xcodeproj
+xcode_scheme: WeatherAlert
+xcode_sdk: iphonesimulator8.0
