@@ -9,6 +9,7 @@
 import Foundation
 import ObjectMapper
 
+/// CityList holds a list of cities loaded from the local json file provided by Open Weather
 class CityList {
     static let sharedInstance = CityList(fileName: "city.list", newLineDelimited: true)!
     private(set) var cities: [City]?
@@ -16,7 +17,14 @@ class CityList {
     private var jsonString: String?
     private let backgroundQueue = dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)
     
-    
+    /**
+     Initialises `CityList` with given file name
+     
+     - parameter fileName:         Name of the file in app resources
+     - parameter newLineDelimited: Default is `false`. Open Weather provides JSON file in newline delimited JSON format.
+     
+     - returns: `CityList` instance or `nil` if failed to load from json file
+     */
     init?(fileName: String, newLineDelimited: Bool = false) {
         self.fileName = fileName
         let filePath = NSBundle.mainBundle().pathForResource(fileName, ofType: "json")
@@ -33,6 +41,11 @@ class CityList {
         }
     }
     
+    /**
+     Loads cities into memory in background thread
+     
+     - parameter completion: This block is called when parsing of JSON file finishes and provides a list of cities to work with
+     */
     func load(completion: ((cities: [City]?)->())?) {
         guard cities == nil else {
             completion?(cities: cities)
@@ -47,6 +60,13 @@ class CityList {
         })
     }
     
+    /**
+     Searches for a city from a list loaded in memory
+     
+     - parameter searchName: text to search for
+     - parameter country:    limit search by country
+     - parameter completion: results are passed to this block on completion
+     */
     func search(name searchName: String, country: String? = nil, completion: (cities: [City])->()) {
         guard cities != nil else {
             completion(cities: [])
