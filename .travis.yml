@@ -3,9 +3,14 @@ before_install:
  - rvm use system
  - sudo gem install cocoapods -v '1.0.0'
 
+<<<<<<< Updated upstream
 install: pod install --repo-update
 
 osx_image: xcode7.3
+=======
+osx_image: xcode7
+script: set -o pipefail && xcodebuild test -workspace WeatherAlert.xcworkspace -scheme WeatherAlert -sdk iphonesimulator9.3 | xcpretty
+>>>>>>> Stashed changes
 xcode_workspace: WeatherAlert.xcworkspace
 xcode_scheme: WeatherAlert
 xcode_sdk: iphonesimulator9.3
