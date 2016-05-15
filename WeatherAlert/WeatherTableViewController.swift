@@ -7,14 +7,20 @@
 //
 
 import UIKit
+import CoreData
+import RNActivityView
+import Haneke
 
-class WeatherTableViewController: UITableViewController {
+
+class WeatherTableViewController: UITableViewController, CitiesSearchTableViewControllerDelegate {
 
     let citiesSearchResultsController = CitiesSearchTableViewController()
     var searchController = UISearchController()
+    var fetchedResultsController: NSFetchedResultsController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        citiesSearchResultsController.delegate = self
         searchController = UISearchController(searchResultsController: citiesSearchResultsController)
         searchController.searchResultsUpdater = citiesSearchResultsController
         searchController.hidesNavigationBarDuringPresentation = false
@@ -23,6 +29,15 @@ class WeatherTableViewController: UITableViewController {
         definesPresentationContext = true
         navigationItem.titleView = searchController.searchBar
         
+        setupFetchedResultsController()
+    }
+    
+    private func setupFetchedResultsController() {
+        let fetchRequest = NSFetchRequest(entityName: "CityWeather")
+        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CDM.sharedInstance.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController?.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,71 +46,53 @@ class WeatherTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return fetchedResultsController?.fetchedObjects?.count ?? 0
     }
     
-    
-    /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCellWithIdentifier("BasicWeatherCell", forIndexPath: indexPath) as! BasicWeatherTableViewCell
+        
+        if let weatherInfo = fetchedResultsController?.fetchedObjects?[indexPath.row] as? CityWeather {
+            cell.cityNameLabel.text = weatherInfo.name
+            if let icon = weatherInfo.weather?.icon, imageURL = NSURL(string: "http://openweathermap.org/img/w/\(icon).png") {
+                cell.weatherImageView.hnk_setImageFromURL(imageURL)
+            }
+            
+        } else {
+            cell.cityNameLabel.text = nil
+            cell.weatherImageView.image = nil
+        }
+    
+        
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    // MARK: - Cities search delegate
+    func citiesSearchController(controller: CitiesSearchTableViewController, didSelectCity city: City) {
+        searchController.active = false
+        guard city.name != nil else {return}
+        
+        navigationController?.view.showActivityViewWithLabel("Loading", detailLabel: "Please wait")
+        API.sharedInstance.executeEndpoint(Endpoints.GetCurrentWeather, withParameters: ["id" : city.name!]) { [weak self] response, error in
+            if let weatherObject = response as? [String : AnyObject] where error == nil {
+                CityWeather(jsonObject: weatherObject)
+            } else {
+                // TODO: Show error aler
+                let alert = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .Cancel, handler: nil))
+                self?.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
+    
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+extension WeatherTableViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        tableView.reloadData()
+    }
+}
+

@@ -71,6 +71,15 @@ class API {
                 return
             }
             
+            if let httpResponse = response as? NSHTTPURLResponse {
+                if httpResponse.statusCode < 200 && httpResponse.statusCode > 200 {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion(response: httpResponse, error: NSError(domain: "Platform error domain", code: httpResponse.statusCode, userInfo: nil))    
+                    })
+                    return
+                }
+            }
+            
             do {
                 let jsonData = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
                 dispatch_async(dispatch_get_main_queue(), {

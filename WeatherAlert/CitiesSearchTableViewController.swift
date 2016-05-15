@@ -8,9 +8,14 @@
 
 import UIKit
 
+protocol CitiesSearchTableViewControllerDelegate : NSObjectProtocol {
+    func citiesSearchController(controller: CitiesSearchTableViewController, didSelectCity city: City)
+}
+
 class CitiesSearchTableViewController: UITableViewController, UISearchResultsUpdating {
 
     private var cities: [City] = []
+    weak var delegate: CitiesSearchTableViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +51,7 @@ class CitiesSearchTableViewController: UITableViewController, UISearchResultsUpd
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let cityInfo = cities[indexPath.row]
-        print("cityInfo")
+        delegate?.citiesSearchController(self, didSelectCity: cityInfo)
     }
     
     // MARK: - Search results

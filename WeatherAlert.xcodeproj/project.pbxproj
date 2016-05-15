@@ -34,6 +34,7 @@
 		5FB495961CE74B6500E01C48 /* CityListHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB495951CE74B6500E01C48 /* CityListHandlerTests.swift */; };
 		5FC6AA4E1CE8F947002A7AF0 /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC6AA4D1CE8F947002A7AF0 /* APITests.swift */; };
 		5FC6AA511CE8FA5D002A7AF0 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC6AA501CE8FA5D002A7AF0 /* API.swift */; };
+		5FC6AA561CE92B04002A7AF0 /* BasicWeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC6AA551CE92B04002A7AF0 /* BasicWeatherTableViewCell.swift */; };
 		CEF479777F28FC5215F5C022 /* Pods_WeatherAlertUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2A47B0FC437315FBADD7075 /* Pods_WeatherAlertUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,7 @@
 		5FB4959D1CE7684100E01C48 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		5FC6AA4D1CE8F947002A7AF0 /* APITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		5FC6AA501CE8FA5D002A7AF0 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		5FC6AA551CE92B04002A7AF0 /* BasicWeatherTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasicWeatherTableViewCell.swift; sourceTree = "<group>"; };
 		B2A47B0FC437315FBADD7075 /* Pods_WeatherAlertUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherAlertUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C6AEF96F35EEE128232720 /* Pods-WeatherAlertUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherAlertUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WeatherAlertUITests/Pods-WeatherAlertUITests.release.xcconfig"; sourceTree = "<group>"; };
 		C95C4F59E324D9E2D60F7FB4 /* Pods-WeatherAlert.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherAlert.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WeatherAlert/Pods-WeatherAlert.debug.xcconfig"; sourceTree = "<group>"; };
@@ -200,8 +202,7 @@
 				5F3BD52A1CE8C3F80025BEBD /* CoreData */,
 				5FB4959A1CE765FF00E01C48 /* CityHandler */,
 				5FB495641CE736AD00E01C48 /* AppDelegate.swift */,
-				5F3BD5201CE7F6630025BEBD /* WeatherTableViewController.swift */,
-				5F3BD5221CE86EAA0025BEBD /* CitiesSearchTableViewController.swift */,
+				5FC6AA531CE92AD7002A7AF0 /* Controllers */,
 				5FB495681CE736AD00E01C48 /* Main.storyboard */,
 				5FB4956E1CE736AD00E01C48 /* Assets.xcassets */,
 				5FB495701CE736AD00E01C48 /* LaunchScreen.storyboard */,
@@ -257,6 +258,24 @@
 				5F3BD5281CE89F810025BEBD /* CityWeatherObject.json */,
 			);
 			name = "Test Payload";
+			sourceTree = "<group>";
+		};
+		5FC6AA531CE92AD7002A7AF0 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				5FC6AA541CE92AEB002A7AF0 /* Cells */,
+				5F3BD5201CE7F6630025BEBD /* WeatherTableViewController.swift */,
+				5F3BD5221CE86EAA0025BEBD /* CitiesSearchTableViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		5FC6AA541CE92AEB002A7AF0 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				5FC6AA551CE92B04002A7AF0 /* BasicWeatherTableViewCell.swift */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -538,6 +557,7 @@
 				5F3BD5241CE870290025BEBD /* CityListHandler.swift in Sources */,
 				5F3BD5231CE86EAA0025BEBD /* CitiesSearchTableViewController.swift in Sources */,
 				5FB4956D1CE736AD00E01C48 /* WeatherAlert.xcdatamodeld in Sources */,
+				5FC6AA561CE92B04002A7AF0 /* BasicWeatherTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
