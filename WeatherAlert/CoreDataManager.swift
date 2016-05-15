@@ -9,10 +9,10 @@
 import Foundation
 import CoreData
 
+/// Core Data Manager
 class CDM {
     
     static let sharedInstance = CDM()
-    
     
     // MARK: - Core Data stack
     
@@ -78,7 +78,25 @@ class CDM {
     }
     
     // MARK: - Core data deletion of objects
-    func deleteAll() {
-        
+    /**
+     Delete objects with specified entity name
+     
+     - parameter names: a list of entity names to delete
+     - note: We have to use old way in order to support iOS 8.. iOS 9 has a nice API for this stuff
+     */
+    func deleteObjects(entityName names: String...) {
+        for name in names {
+            let fetch = NSFetchRequest(entityName: name)
+            do {
+                let items = try managedObjectContext.executeFetchRequest(fetch)
+                for obj in items {
+                    managedObjectContext.deleteObject(obj as! NSManagedObject)
+                }
+            } catch let err as NSError{
+                print("failed to delete objects for entity name: \(name). Error: \(err)")
+            }
+        }
     }
+    
+
 }
