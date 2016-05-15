@@ -11,7 +11,7 @@ import ObjectMapper
 
 /// CityList holds a list of cities loaded from the local json file provided by Open Weather
 class CityList {
-    static let sharedInstance = CityList(fileName: "city.list", newLineDelimited: true)
+    static let sharedInstance = CityList(fileName: "city.list", newLineDelimited: true)!
     private(set) var cities: [City]?
     private(set) var fileName: String
     private var jsonString: String?
