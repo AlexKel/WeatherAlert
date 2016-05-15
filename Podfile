@@ -8,7 +8,8 @@ target 'WeatherAlert' do
   use_frameworks!
 
   # Pods for WeatherAlert
-
+  pod 'ObjectMapper'
+  
   target 'WeatherAlertTests' do
     inherit! :search_paths
     # Pods for testing
