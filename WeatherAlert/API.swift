@@ -8,6 +8,20 @@
 
 import Foundation
 
+enum HTTPMethod : String {
+    case GET = "GET"
+}
+
+enum APIFunction : String {
+    case Weather = "weather"
+}
+
+typealias APIEndpoint = (method: HTTPMethod, function: APIFunction)
+struct Endpoints {
+    static let GetCurrentWeather: APIEndpoint = (.GET, .Weather)
+}
+
+
 class API {
     
     static let sharedInstance = API(appID: "87007d2e2b7d6d780bc634854fb2feba")
@@ -61,5 +75,12 @@ class API {
         })
         
         dataTask.resume()
+    }
+    
+    func urlRequestForEndpoint(endpoint: APIEndpoint) -> NSMutableURLRequest? {
+        let url = serverURL.URLByAppendingPathComponent(endpoint.function.rawValue)
+        let request = NSMutableURLRequest(URL: url)
+        request.HTTPMethod = endpoint.method.rawValue
+        return request
     }
 }

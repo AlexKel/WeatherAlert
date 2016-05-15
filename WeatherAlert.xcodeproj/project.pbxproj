@@ -214,11 +214,11 @@
 		5FB4957B1CE736AD00E01C48 /* WeatherAlertTests */ = {
 			isa = PBXGroup;
 			children = (
+				5FC6AA521CE91279002A7AF0 /* Test Payload */,
 				5FB4957C1CE736AD00E01C48 /* WeatherAlertTests.swift */,
 				5FB4957E1CE736AD00E01C48 /* Info.plist */,
 				5FB495951CE74B6500E01C48 /* CityListHandlerTests.swift */,
 				5F3BD5261CE88D030025BEBD /* CoreDataTests.swift */,
-				5F3BD5281CE89F810025BEBD /* CityWeatherObject.json */,
 				5FC6AA4D1CE8F947002A7AF0 /* APITests.swift */,
 			);
 			path = WeatherAlertTests;
@@ -249,6 +249,14 @@
 				5FC6AA501CE8FA5D002A7AF0 /* API.swift */,
 			);
 			name = API;
+			sourceTree = "<group>";
+		};
+		5FC6AA521CE91279002A7AF0 /* Test Payload */ = {
+			isa = PBXGroup;
+			children = (
+				5F3BD5281CE89F810025BEBD /* CityWeatherObject.json */,
+			);
+			name = "Test Payload";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

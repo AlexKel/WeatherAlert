@@ -8,16 +8,29 @@
 
 import XCTest
 @testable import WeatherAlert
+import OHHTTPStubs
 
 class APITests: XCTestCase {
 
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        OHHTTPStubs.removeAllStubs()
+        
+        // Stub get current weather response
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return request.URL!.absoluteString.containsString("http://api.openweathermap.org/data/2.5/weather")
+            }, withStubResponse: { _ in
+                let testResponseFilePath = NSBundle(forClass: self.dynamicType).pathForResource("CityWeatherObject", ofType: "json")!
+                let stubResponse = OHHTTPStubsResponse(fileAtPath: testResponseFilePath, statusCode: 200, headers: ["Content-Type" : "application/json"])
+                
+                return stubResponse
+        })
     }
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        OHHTTPStubs.removeAllStubs()
         super.tearDown()
     }
 
@@ -82,6 +95,25 @@ class APITests: XCTestCase {
         }
         
         waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
+    func testEndpoints() {
+        let api = API.sharedInstance
+        
+        // Current weather
+        let endpoint = Endpoints.GetCurrentWeather
+        XCTAssertEqual(endpoint.function, APIFunction.Weather)
+        XCTAssertEqual(endpoint.method, HTTPMethod.GET)
+        let urlRequest = api.urlRequestForEndpoint(endpoint)
+        XCTAssertNotNil(urlRequest)
+        XCTAssertEqual(urlRequest?.URL, NSURL(string: "http://api.openweathermap.org/data/2.5/weather"))
+        XCTAssertEqual(urlRequest?.HTTPMethod, "GET")
+        
+    }
+    
+    func testGetCurrentWeatherForCityWithID() {
+        let api = API.sharedInstance
+        
     }
     
     
