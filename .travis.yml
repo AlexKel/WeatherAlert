@@ -5,10 +5,7 @@ before_install:
 install: pod install --repo-update
 
 osx_image: xcode7.3
-script: set -o pipefail && xcodebuild test -workspace WeatherAlert.xcworkspace -scheme WeatherAlert -sdk iphonesimulator9.3 | xcpretty
-xcode_workspace: WeatherAlert.xcworkspace
-xcode_scheme: WeatherAlert
-xcode_sdk: iphonesimulator9.3
+script: set -o pipefail && xcodebuild test -workspace WeatherAlert.xcworkspace -scheme WeatherAlert -sdk iphonesimulator9.3
 
 notifications:
   slack: motionlyltd:vyytznXZOCRiogMAJcfwfK3S
