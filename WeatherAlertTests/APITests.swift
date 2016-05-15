@@ -15,17 +15,6 @@ class APITests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        OHHTTPStubs.removeAllStubs()
-        
-        // Stub get current weather response
-        OHHTTPStubs.stubRequestsPassingTest({ request in
-            return request.URL!.absoluteString.containsString("http://api.openweathermap.org/data/2.5/weather")
-            }, withStubResponse: { _ in
-                let testResponseFilePath = NSBundle(forClass: self.dynamicType).pathForResource("CityWeatherObject", ofType: "json")!
-                let stubResponse = OHHTTPStubsResponse(fileAtPath: testResponseFilePath, statusCode: 200, headers: ["Content-Type" : "application/json"])
-                
-                return stubResponse
-        })
     }
     
     override func tearDown() {
@@ -115,7 +104,6 @@ class APITests: XCTestCase {
     func testEndpointWithParams() {
         let params = [
             "id" : 2643743,
-            "appID" : 123123123,
             "name" : "London"
         ]
         
@@ -123,13 +111,39 @@ class APITests: XCTestCase {
         let endpoint = Endpoints.GetCurrentWeather
         let urlRequest = api.urlRequestForEndpoint(endpoint, params: params)
         XCTAssertNotNil(urlRequest)
-        XCTAssertEqual(urlRequest?.URL, NSURL(string: "http://api.openweathermap.org/data/2.5/weather?id=2643743&appID=123123123&name=London"))
+        XCTAssertEqual(urlRequest?.URL, NSURL(string: "http://api.openweathermap.org/data/2.5/weather?id=2643743&name=London&APPID=\(api.appID)"))
         XCTAssertEqual(urlRequest?.HTTPMethod, "GET")
     }
     
     func testGetCurrentWeatherForCityWithID() {
+        // Stub get current weather response
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return request.URL!.absoluteString.containsString("http://api.openweathermap.org/data/2.5/weather")
+            }, withStubResponse: { _ in
+                let testResponseFilePath = NSBundle(forClass: self.dynamicType).pathForResource("CityWeatherObject", ofType: "json")!
+                let stubResponse = OHHTTPStubsResponse(fileAtPath: testResponseFilePath, statusCode: 200, headers: ["Content-Type" : "application/json"])
+                return stubResponse
+        })
+
         let api = API.sharedInstance
+        let endpoint = Endpoints.GetCurrentWeather
+        let params = [
+            "id" : 2643743
+        ]
+        let expectation = expectationWithDescription("Did get current weather")
         
+        api.executeEndpoint(endpoint, withParameters: params) { response, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(response)
+            let object = response as? [String : AnyObject]
+            XCTAssertNotNil(object)
+            XCTAssertEqual(object?["name"] as? String, "London")
+            XCTAssertEqual(object?["id"] as? Int, 2643743)
+            XCTAssertEqual(object?["dt"] as? Int, 1463308797)
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
     }
     
     

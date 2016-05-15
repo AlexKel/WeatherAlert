@@ -67,9 +67,13 @@ class API {
             
             do {
                 let jsonData = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
-                completion(response: jsonData, error: nil)
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(response: jsonData, error: nil)
+                })
             } catch let err as NSError {
-                completion(response: response, error: err)
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion(response: response, error: err)
+                })
             }
             
         })
@@ -86,6 +90,7 @@ class API {
                 let queryItem = NSURLQueryItem(name: key, value: "\(value)")
                 queryItems.append(queryItem)
             }
+            queryItems.append(NSURLQueryItem(name: "APPID", value: appID))
             comps?.queryItems = queryItems
         }
         
@@ -96,6 +101,15 @@ class API {
         } else {
             return nil
         }
+    }
+    
+    func executeEndpoint(endpoint: APIEndpoint, withParameters params: [String : AnyObject]? = nil, completion: APIResponseBlock) {
+        if let request = urlRequestForEndpoint(endpoint, params: params) {
+            handleURLRequest(request, completion: completion)
+        } else {
+            completion(response: nil, error: NSError(domain: "API url request creation error domain", code: 400, userInfo: nil))
+        }
+        
     }
 }
 
