@@ -77,10 +77,25 @@ class API {
         dataTask.resume()
     }
     
-    func urlRequestForEndpoint(endpoint: APIEndpoint) -> NSMutableURLRequest? {
+    func urlRequestForEndpoint(endpoint: APIEndpoint, params: [String : AnyObject]? = nil) -> NSMutableURLRequest? {
         let url = serverURL.URLByAppendingPathComponent(endpoint.function.rawValue)
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = endpoint.method.rawValue
-        return request
+        let comps = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)
+        if params != nil {
+            var queryItems: [NSURLQueryItem] = []
+            for (key, value) in params! {
+                let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+                queryItems.append(queryItem)
+            }
+            comps?.queryItems = queryItems
+        }
+        
+        if let newURL = comps?.URL {
+            let request = NSMutableURLRequest(URL: newURL)
+            request.HTTPMethod = endpoint.method.rawValue
+            return request
+        } else {
+            return nil
+        }
     }
 }
+

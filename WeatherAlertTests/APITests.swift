@@ -111,6 +111,22 @@ class APITests: XCTestCase {
         
     }
     
+    
+    func testEndpointWithParams() {
+        let params = [
+            "id" : 2643743,
+            "appID" : 123123123,
+            "name" : "London"
+        ]
+        
+        let api = API.sharedInstance
+        let endpoint = Endpoints.GetCurrentWeather
+        let urlRequest = api.urlRequestForEndpoint(endpoint, params: params)
+        XCTAssertNotNil(urlRequest)
+        XCTAssertEqual(urlRequest?.URL, NSURL(string: "http://api.openweathermap.org/data/2.5/weather?id=2643743&appID=123123123&name=London"))
+        XCTAssertEqual(urlRequest?.HTTPMethod, "GET")
+    }
+    
     func testGetCurrentWeatherForCityWithID() {
         let api = API.sharedInstance
         
