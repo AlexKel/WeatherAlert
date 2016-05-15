@@ -13,6 +13,7 @@ target 'WeatherAlert' do
   target 'WeatherAlertTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'OHHTTPStubs'
   end
 
   target 'WeatherAlertUITests' do

@@ -1,12 +1,27 @@
 PODS:
   - ObjectMapper (1.2.0)
+  - OHHTTPStubs (5.0.0):
+    - OHHTTPStubs/Default (= 5.0.0)
+  - OHHTTPStubs/Core (5.0.0)
+  - OHHTTPStubs/Default (5.0.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (5.0.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (5.0.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (5.0.0)
 
 DEPENDENCIES:
   - ObjectMapper
+  - OHHTTPStubs
 
 SPEC CHECKSUMS:
   ObjectMapper: b1e9c7c8a9f6400b72690c80072c131504caa66f
+  OHHTTPStubs: a5d2e9eea07869d42ec03338325f398bc520e159
 
-PODFILE CHECKSUM: 5749d0122d8547260a213c892635affabb22ea95
+PODFILE CHECKSUM: 8616a0cb3b8284e7d383ca8e9c10f036bc79daf2
 
 COCOAPODS: 1.0.0
