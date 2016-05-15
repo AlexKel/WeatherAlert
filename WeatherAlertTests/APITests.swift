@@ -36,6 +36,8 @@ class APITests: XCTestCase {
         let api_second_inst = API(appID: "test")
         XCTAssertNotEqual(api_inst.appID, api_second_inst.appID)
         XCTAssertNotEqual(api_shared.appID, api_second_inst.appID)
+        
+        XCTAssertEqual(api_shared.serverURL, NSURL(string: "http://api.openweathermap.org/data/2.5"))
     }
-
+    
 }
