@@ -10,8 +10,13 @@ import Foundation
 import CoreData
 
 
-class Wind: NSManagedObject {
+class Wind: NSManagedObject, JSONMappableManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 
+    func mapJSON(object: [String : AnyObject]) {
+        speed = object["speed"] as? Double
+        deg = object["deg"] as? Double
+    }
+    
 }

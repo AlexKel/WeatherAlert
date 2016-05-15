@@ -4,7 +4,7 @@
         <attribute name="dt" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="weather" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Weather" inverseName="cityWeather" inverseEntity="Weather" syncable="YES"/>
+        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Weather" inverseName="cityWeather" inverseEntity="Weather" syncable="YES"/>
         <relationship name="wind" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Wind" inverseName="cityWeather" inverseEntity="Wind" syncable="YES"/>
     </entity>
     <entity name="Weather" representedClassName=".Weather" syncable="YES">

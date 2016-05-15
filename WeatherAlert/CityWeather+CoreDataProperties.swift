@@ -17,7 +17,7 @@ extension CityWeather {
     @NSManaged var name: String?
     @NSManaged var id: NSNumber?
     @NSManaged var dt: NSNumber?
-    @NSManaged var weather: NSSet?
+    @NSManaged var weather: Weather?
     @NSManaged var wind: Wind?
 
 }

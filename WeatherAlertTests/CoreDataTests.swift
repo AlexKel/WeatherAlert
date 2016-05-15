@@ -27,12 +27,14 @@ class CoreDataTests: XCTestCase {
         }
         XCTAssertNotNil(cityWeatherObjectJSONString, "Test json object CityWeatherObject failed to load")
         
-        
+        CDM.sharedInstance.deleteAll()
     }
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
+        
+        CDM.sharedInstance.deleteAll()
     }
     
    
@@ -43,18 +45,17 @@ class CoreDataTests: XCTestCase {
         let count = coreDataManager.managedObjectContext.countForFetchRequest(fetch, error: &error)
         XCTAssertEqual(count, 0, "There shouldn't be any CityWeather objects in core data from the start")
         
-        let cityWeather = NSEntityDescription.insertNewObjectForEntityForName("CityWeather", inManagedObjectContext: coreDataManager.managedObjectContext) as? CityWeather
-        cityWeather?.setValuesForKeysWithDictionary(cityWeatherObjectJSONString!)
+        let cityWeather = CityWeather(jsonObject: cityWeatherObjectJSONString!)
         XCTAssertNotNil(cityWeather, "Inserted object isn't a CityWather object")
         XCTAssertEqual(cityWeather?.name, "London")
         XCTAssertEqual(cityWeather?.id, 2643743)
         XCTAssertNotNil(cityWeather?.weather)
         
-        let currentWeather = cityWeather?.weather?.anyObject() as? Weather
+        let currentWeather = cityWeather?.weather
         XCTAssertNotNil(currentWeather)
-        XCTAssertEqual(currentWeather?.id, "800")
+        XCTAssertEqual(currentWeather?.id, 800)
         XCTAssertEqual(currentWeather?.main, "Clear")
-        XCTAssertEqual(currentWeather?.description, "clear sky")
+        XCTAssertEqual(currentWeather?.desc, "clear sky")
         XCTAssertEqual(currentWeather?.icon, "01d")
         let wind = cityWeather?.wind
         XCTAssertNotNil(wind)
