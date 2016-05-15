@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 class CityList {
-    static let sharedInstance = CityList(fileName: "city.list", newLineDelimited: true)
+    static let sharedInstance = CityList(fileName: "city.list", newLineDelimited: true)!
     private(set) var cities: [City]?
     private(set) var fileName: String
     private var jsonString: String?
