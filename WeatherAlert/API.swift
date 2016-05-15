@@ -57,6 +57,12 @@ class API {
     
     
     // MARK: - Main handlers
+    /**
+     Handles url requests
+     
+     - parameter request:    URL Requst to process
+     - parameter completion: returns a tuple of response and error optionals
+     */
     func handleURLRequest(request: NSURLRequest, completion: APIResponseBlock) {
         let dataTask = getSession().dataTaskWithRequest(request, completionHandler: { (data: NSData?, response: NSURLResponse?, error: NSError?) in
 
@@ -81,6 +87,16 @@ class API {
         dataTask.resume()
     }
     
+    /**
+     Generates full url based on `APIEndpoint` object provided and optional parameters
+     
+     - warning: Currently handles onlt GET requests!
+     
+     - parameter endpoint: `APIEndpoint` to use
+     - parameter params:   Parameters for a request
+     
+     - returns: URL Request object
+     */
     func urlRequestForEndpoint(endpoint: APIEndpoint, params: [String : AnyObject]? = nil) -> NSMutableURLRequest? {
         let url = serverURL.URLByAppendingPathComponent(endpoint.function.rawValue)
         let comps = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)
@@ -103,6 +119,13 @@ class API {
         }
     }
     
+    /**
+     Runs `handleURLRequest` with given `APIEndpoint` and parameters
+     
+     - parameter endpoint:   `APIEndpoint` to use execute
+     - parameter params:     Dictionary of parameters to use
+     - parameter completion: returns a tuple of response and error optionals
+     */
     func executeEndpoint(endpoint: APIEndpoint, withParameters params: [String : AnyObject]? = nil, completion: APIResponseBlock) {
         if let request = urlRequestForEndpoint(endpoint, params: params) {
             handleURLRequest(request, completion: completion)
