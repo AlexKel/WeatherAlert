@@ -147,4 +147,47 @@ class APITests: XCTestCase {
     }
     
     
+    func testGetWeatherForecastForCityWithID() {
+        
+        OHHTTPStubs.stubRequestsPassingTest({ request in
+            return request.URL!.absoluteString.containsString("http://api.openweathermap.org/data/2.5/forecast")
+            }, withStubResponse: { _ in
+                let testResponseFilePath = NSBundle(forClass: self.dynamicType).pathForResource("WeatherForecast", ofType: "json")!
+                let stubResponse = OHHTTPStubsResponse(fileAtPath: testResponseFilePath, statusCode: 200, headers: ["Content-Type" : "application/json"])
+                return stubResponse
+        })
+
+        
+        
+        let api = API.sharedInstance
+        let endpoint = Endpoints.GetWeatherForecast
+        let params = [
+            "id" : 2643743
+        ]
+        
+        let expectation = expectationWithDescription("Did get weather forecast")
+        
+        api.executeEndpoint(endpoint, withParameters: params) { response, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(response)
+            let object = response as? [String : AnyObject]
+            XCTAssertNotNil(object)
+            let city = object?["city"] as? [String : AnyObject]
+            XCTAssertEqual(city?["name"] as? String, "London")
+            XCTAssertEqual(city?["id"] as? Int, 2643743)
+        
+            let count = object?["cnt"] as? Int
+            XCTAssertEqual(count, 40)
+            
+            let list = object?["list"] as? [[String : AnyObject]]
+            XCTAssertNotNil(list)
+            XCTAssertEqual(list?.count ?? 0, count)
+            
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
+    
 }

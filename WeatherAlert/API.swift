@@ -13,12 +13,13 @@ enum HTTPMethod : String {
 }
 
 enum APIFunction : String {
-    case Weather = "weather"
+    case Weather = "weather", Forecast = "forecast"
 }
 
 typealias APIEndpoint = (method: HTTPMethod, function: APIFunction)
 struct Endpoints {
     static let GetCurrentWeather: APIEndpoint = (.GET, .Weather)
+    static let GetWeatherForecast: APIEndpoint = (.GET, .Forecast)
 }
 
 

@@ -78,22 +78,68 @@
             </objects>
             <point key="canvasLocation" x="548" y="752"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Weather Forecast Table View Controller-->
         <scene sceneID="srR-eN-ATH">
             <objects>
-                <tableViewController id="bc3-5U-kyH" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="KdP-Pz-lED">
+                <tableViewController id="bc3-5U-kyH" customClass="WeatherForecastTableViewController" customModule="WeatherAlert" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" id="KdP-Pz-lED">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Cxt-cs-fZx">
-                                <rect key="frame" x="0.0" y="122" width="600" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ForecastWeatherTableViewCell" rowHeight="60" id="Cxt-cs-fZx" customClass="ForecastWeatherTableViewCell" customModule="WeatherAlert" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="122" width="600" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Cxt-cs-fZx" id="rl5-Fo-h3N">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="59"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IhF-Xv-SSS">
+                                            <rect key="frame" x="10" y="10" width="39" height="39"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="IhF-Xv-SSS" secondAttribute="height" multiplier="1:1" id="Xn7-Ba-fRA"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5th Feb, 12:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oaN-vu-jE4">
+                                            <rect key="frame" x="59" y="10" width="92" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" weight="thin" pointSize="14"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RM5-Wb-niW">
+                                            <rect key="frame" x="59" y="28" width="92" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="wind mps: 4.56" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2YM-iY-MCV">
+                                            <rect key="frame" x="161" y="10" width="429" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="2YM-iY-MCV" firstAttribute="top" secondItem="rl5-Fo-h3N" secondAttribute="top" constant="10" id="GF6-4n-7f6"/>
+                                        <constraint firstAttribute="trailing" secondItem="2YM-iY-MCV" secondAttribute="trailing" constant="10" id="GNE-6E-chx"/>
+                                        <constraint firstItem="RM5-Wb-niW" firstAttribute="width" secondItem="oaN-vu-jE4" secondAttribute="width" id="Hph-EH-J14"/>
+                                        <constraint firstItem="IhF-Xv-SSS" firstAttribute="top" secondItem="rl5-Fo-h3N" secondAttribute="top" constant="10" id="SMx-TY-jge"/>
+                                        <constraint firstItem="IhF-Xv-SSS" firstAttribute="leading" secondItem="rl5-Fo-h3N" secondAttribute="leading" constant="10" id="TBw-4w-6RZ"/>
+                                        <constraint firstAttribute="bottom" secondItem="RM5-Wb-niW" secondAttribute="bottom" constant="10" id="Wxv-HL-IHp"/>
+                                        <constraint firstItem="RM5-Wb-niW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="oaN-vu-jE4" secondAttribute="bottom" id="gIU-Ns-23w"/>
+                                        <constraint firstItem="oaN-vu-jE4" firstAttribute="leading" secondItem="IhF-Xv-SSS" secondAttribute="trailing" constant="10" id="hdD-MI-HcH"/>
+                                        <constraint firstItem="RM5-Wb-niW" firstAttribute="leading" secondItem="IhF-Xv-SSS" secondAttribute="trailing" constant="10" id="jtN-FA-BFU"/>
+                                        <constraint firstItem="oaN-vu-jE4" firstAttribute="top" secondItem="rl5-Fo-h3N" secondAttribute="top" constant="10" id="nCD-ha-Eoe"/>
+                                        <constraint firstItem="2YM-iY-MCV" firstAttribute="leading" secondItem="oaN-vu-jE4" secondAttribute="trailing" constant="10" id="roJ-B5-b1Q"/>
+                                        <constraint firstAttribute="bottom" secondItem="IhF-Xv-SSS" secondAttribute="bottom" constant="10" id="vyo-nx-Dfz"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dateLabel" destination="oaN-vu-jE4" id="b1h-OG-HCO"/>
+                                    <outlet property="temperatureLabel" destination="RM5-Wb-niW" id="sXf-vm-Pcw"/>
+                                    <outlet property="weatherImageView" destination="IhF-Xv-SSS" id="qUj-sm-pHk"/>
+                                    <outlet property="windSpeedLabel" destination="2YM-iY-MCV" id="61B-Az-a3o"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
