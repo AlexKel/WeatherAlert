@@ -6,9 +6,12 @@ import UIKit
 
 
 class WindDirection {
-    class func imageOfSize(size: CGSize, direction: Double, color: UIColor = UIColor.whiteColor()) -> UIImage {
+    class func imageOfSize(bounds: CGSize, direction: Double, color: UIColor = UIColor.whiteColor()) -> UIImage {
+        
+        let size = CGSizeMake(bounds.width-2.0, bounds.height-2.0)
+        
         let rect = CGRect(origin: .zero, size: size)
-        UIGraphicsBeginImageContextWithOptions(size, false, 2.0)
+        UIGraphicsBeginImageContextWithOptions(bounds, false, 2.0)
         let ctx = UIGraphicsGetCurrentContext()
         
         CGContextAddEllipseInRect(ctx, rect)
@@ -17,7 +20,7 @@ class WindDirection {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .Center
         let attrs = [
-            NSFontAttributeName: UIFont(name: "HelveticaNeue-Thin", size: 5)!,
+            NSFontAttributeName: UIFont(name: "HelveticaNeue", size: 6)!,
             NSParagraphStyleAttributeName: paragraphStyle,
             NSForegroundColorAttributeName : color]
         
@@ -33,35 +36,39 @@ class WindDirection {
         CGContextMoveToPoint(ctx, CGRectGetMidX(rect), CGRectGetMaxY(rect))
         CGContextAddLineToPoint(ctx, CGRectGetMidX(rect), CGRectGetMaxY(rect) - dashSize)
         string = "S"
-        string.drawWithRect(CGRect(x: 0, y: CGRectGetMaxY(rect) - dashSize - 14, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
+        string.drawWithRect(CGRect(x: 0, y: CGRectGetMaxY(rect) - dashSize - 10, width: size.width, height:size.height), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
         
         // west
         CGContextMoveToPoint(ctx, CGRectGetMinX(rect), CGRectGetMidY(rect))
         CGContextAddLineToPoint(ctx, CGRectGetMinX(rect) + dashSize, CGRectGetMidY(rect))
         string = "W"
-        string.drawWithRect(CGRect(x: -CGRectGetMidX(rect) + dashSize + 10, y: CGRectGetMidY(rect) - 6, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
+        string.drawWithRect(CGRect(x: -CGRectGetMidX(rect) + dashSize + 6, y: CGRectGetMidY(rect) - 4, width: size.width, height: size.height), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
         
         // east
         CGContextMoveToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMidY(rect))
         CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect) - dashSize, CGRectGetMidY(rect))
         string = "E"
-        string.drawWithRect(CGRect(x: CGRectGetMidX(rect) - dashSize - 8, y: CGRectGetMidY(rect) - 6, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
-        
-        
-        
+        string.drawWithRect(CGRect(x: CGRectGetMidX(rect) - dashSize - 6, y: CGRectGetMidY(rect) - 4, width: size.width, height: size.height), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
         
         CGContextSetStrokeColorWithColor(ctx, color.CGColor)
         CGContextStrokePath(ctx)
         
         
         // Draw direction
-        let rad = CGFloat((direction - 90.0) *  M_PI / 180)
+        let degrees = CGFloat((direction - 90.0) *  M_PI / 180)
+        let radius: CGFloat = size.width/2.0
         CGContextTranslateCTM(ctx, CGRectGetMidX(rect), CGRectGetMidY(rect))
-        CGContextRotateCTM(ctx, rad)
+        CGContextRotateCTM(ctx, degrees)
+        let path = CGPathCreateMutable()
+        CGPathMoveToPoint(path, nil, size.width/2.0, 0)
+        CGPathAddLineToPoint(path, nil, radius-5, -3)
+        CGPathAddLineToPoint(path, nil, radius-5, 3)
+        CGPathCloseSubpath(path)
         
+        CGContextAddPath(ctx, path)
         CGContextSetStrokeColorWithColor(ctx, UIColor.redColor().CGColor)
-        CGContextMoveToPoint(ctx, rad, 0.0)
-        CGContextAddLineToPoint(ctx, CGRectGetMidX(rect), CGRectGetMinY(rect))
+        CGContextSetFillColorWithColor(ctx, UIColor.redColor().CGColor)
+        CGContextFillPath(ctx)
         CGContextStrokePath(ctx)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
