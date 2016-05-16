@@ -111,7 +111,24 @@ class APITests: XCTestCase {
         let endpoint = Endpoints.GetCurrentWeather
         let urlRequest = api.urlRequestForEndpoint(endpoint, params: params)
         XCTAssertNotNil(urlRequest)
-        XCTAssertEqual(urlRequest?.URL, NSURL(string: "http://api.openweathermap.org/data/2.5/weather?id=2643743&name=London&APPID=\(api.appID)"))
+        if let generatedURL = urlRequest?.URL, testingURL = NSURL(string: "http://api.openweathermap.org/data/2.5/weather?id=2643743&name=London&APPID=\(api.appID)") {
+            let generatedComps = NSURLComponents(URL: generatedURL, resolvingAgainstBaseURL: false)
+            let testingComps = NSURLComponents(URL: testingURL, resolvingAgainstBaseURL: false)
+            
+            XCTAssertEqual(generatedComps?.host, testingComps?.host)
+            XCTAssertEqual(generatedComps?.scheme, testingComps?.scheme)
+            XCTAssertEqual(generatedComps?.path, testingComps?.path)
+            let generatedQueryItems = generatedComps?.queryItems
+            XCTAssertNotNil(generatedQueryItems)
+            let testQueryItems = testingComps?.queryItems
+            for item in testQueryItems! {
+                XCTAssertTrue(generatedQueryItems?.contains(item) ?? false)
+            }
+            
+        } else {
+            XCTFail("Failed to get generated or testin URL")
+        }
+        
         XCTAssertEqual(urlRequest?.HTTPMethod, "GET")
     }
     

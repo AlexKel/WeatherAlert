@@ -77,10 +77,13 @@ class WindDirection {
 }
 
 
-let size = CGSizeMake(39, 39)
-let degrees: Double = 320.004
+//let size = CGSizeMake(39, 39)
+//let degrees: Double = 320.004
+//
+//let image = WindDirection.imageOfSize(size, direction: degrees)
 
-let image = WindDirection.imageOfSize(size, direction: degrees)
 
+let testingURL = NSURL(string: "http://api.openweathermap.org/data/2.5/weather?id=2643743&name=London&APPID=\(123)")
+let testingComps = NSURLComponents(URL: testingURL!, resolvingAgainstBaseURL: false)
 
-
+let path = testingComps?.host
