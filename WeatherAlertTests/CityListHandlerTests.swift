@@ -32,70 +32,9 @@ class CityListHandlerTests: XCTestCase {
         super.tearDown()
     }
     
-    func testCityListLoadToCoreData() {
-        
-            let expectation = self.expectationWithDescription("Cities are loaded to core data from json file")
-            self.cityList?.loadCitiesToCoreData { finished in
-                XCTAssertTrue(finished, "There was an error storing all cities to core data")
-                XCTAssertTrue(NSUserDefaults.standardUserDefaults().boolForKey(self.cityList!.kCityListDidLoadCitiesToCoreDataKey))
-                
-                let testFetch = NSFetchRequest(entityName: "CityWeather")
-                testFetch.fetchLimit = 5
-                let count = CDM.sharedInstance.managedObjectContext.countForFetchRequest(testFetch, error: nil)
-                XCTAssertEqual(count, 5, "There must be 5 cities in fetch")
-                
-                do {
-                    let results = try CDM.sharedInstance.managedObjectContext.executeFetchRequest(testFetch)
-                    XCTAssertTrue(results is [CityWeather])
-                    let firstCity = results.first as? CityWeather
-                    XCTAssertNotNil(firstCity?.name)
-                    XCTAssertNotNil(firstCity?.country)
-                } catch let err as NSError {
-                    XCTFail(err.description)
-                }
-                
-                expectation.fulfill()
-            }
-            self.waitForExpectationsWithTimeout(30, handler: nil)
-        
-        
-    }
-    
-    func testCityListLoading() {
-        // citylist loading must happen in background as it's quite a big file.
-        let expectation = self.expectationWithDescription("City list loaded into memory")
-        self.cityList?.load { cities in
-            
-            XCTAssertNotNil(cities, "Cities object must not be nil, it seems json loading failed")
-            XCTAssertGreaterThan(cities?.count ?? 0, 1, "There must be some cities in the list")
-            
-            let cityObj = cities?.first
-            let city = City(jsonObject: cityObj ?? [:])
-            XCTAssertEqual(city.id, 707860)
-            XCTAssertEqual(city.name, "Hurzuf")
-            XCTAssertEqual(city.country, "UA")
-            
-            let coord = city.coord
-            XCTAssertEqual(coord?.lon, 34.283333)
-            XCTAssertEqual(coord?.lat, 44.549999)
-            expectation.fulfill()
-        }
-        self.waitForExpectationsWithTimeout(30, handler: nil)
-    }
     
     func testCityListSearch() {
-        
-        // load cities first
-        let expectation1 = expectationWithDescription("DidLoad cities")
-        cityList?.loadCitiesToCoreData { finished in
             
-            XCTAssertTrue(finished, "There was an error storing all cities to core data")
-            XCTAssertTrue(NSUserDefaults.standardUserDefaults().boolForKey(self.cityList!.kCityListDidLoadCitiesToCoreDataKey))
-
-            expectation1.fulfill()
-        }
-        waitForExpectationsWithTimeout(60, handler: nil)
-    
         // Search for London
         let expectation2 = expectationWithDescription("Did found cities matching pattern 'London'")
         self.cityList?.search(name: "London") { cities in

@@ -52,6 +52,7 @@ class CityList {
      
      - parameter completion: This block is called when parsing of JSON file finishes and provides a list of cities to work with
      */
+    @available(*, unavailable, message="Really bad performance with large JSON file, database is now pre-populated and stored as a resource")
     func load(completion: ((cities: [[String : AnyObject]]?)->())?) {
         dispatch_async(backgroundQueue, { [weak self] in
             do {
@@ -77,6 +78,7 @@ class CityList {
      
      - parameter completion: Block is called on completion. `finished` is `true` if there were no errors
      */
+    @available(*, unavailable, message="Really bad performance with large JSON file, database is now pre-populated and stored as a resource")
     func loadCitiesToCoreData(completion:((finished: Bool) -> ())?) {
         guard self.jsonString != nil else {
             completion?(finished: false)
@@ -155,7 +157,7 @@ class CityList {
         let fetch = NSFetchRequest(entityName: "CityWeather")
         fetch.predicate = NSPredicate(format: "name contains[c] %@", searchName)
         fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        fetch.fetchLimit = 10
+        fetch.fetchLimit = 50
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetch) { (asynchronousFetchResult) -> Void in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 if let cities = asynchronousFetchResult.finalResult as? [CityWeather] {
