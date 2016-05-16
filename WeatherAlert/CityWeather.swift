@@ -17,6 +17,17 @@ class CityWeather: NSManagedObject, JSONMappableManagedObject {
         dt = object["dt"] as? Int
         name = object["name"] as? String
         id = object["id"] as? Int
+        if let _id = object["_id"] as? Int where id == nil {
+            id = _id
+        }
+        if let main = object["main"] as? [String : AnyObject], temp = main["temp"] as? Double {
+            self.temp = temp
+        }
+        
+        if let country = object["country"] as? String {
+            self.country = country
+        }
+        
         if let weatherArray = object["weather"] as? [[String : AnyObject]], weather = weatherArray.first {
             self.weather = Weather(jsonObject: weather)
         }

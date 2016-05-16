@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
     <entity name="CityWeather" representedClassName=".CityWeather" syncable="YES">
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dt" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="favourite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="temp" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="weather" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Weather" inverseName="cityWeather" inverseEntity="Weather" syncable="YES"/>
         <relationship name="wind" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Wind" inverseName="cityWeather" inverseEntity="Wind" syncable="YES"/>
     </entity>
@@ -20,8 +23,8 @@
         <relationship name="cityWeather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CityWeather" inverseName="wind" inverseEntity="CityWeather" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CityWeather" positionX="-63" positionY="-18" width="128" height="120"/>
-        <element name="Wind" positionX="-54" positionY="18" width="128" height="90"/>
+        <element name="CityWeather" positionX="-63" positionY="-18" width="128" height="165"/>
         <element name="Weather" positionX="-36" positionY="27" width="128" height="120"/>
+        <element name="Wind" positionX="-54" positionY="18" width="128" height="90"/>
     </elements>
 </model>

@@ -71,6 +71,15 @@ class API {
                 return
             }
             
+            if let httpResponse = response as? NSHTTPURLResponse {
+                if httpResponse.statusCode < 200 && httpResponse.statusCode > 200 {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion(response: httpResponse, error: NSError(domain: "Platform error domain", code: httpResponse.statusCode, userInfo: nil))    
+                    })
+                    return
+                }
+            }
+            
             do {
                 let jsonData = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)
                 dispatch_async(dispatch_get_main_queue(), {
@@ -131,6 +140,26 @@ class API {
             handleURLRequest(request, completion: completion)
         } else {
             completion(response: nil, error: NSError(domain: "API url request creation error domain", code: 400, userInfo: nil))
+        }
+        
+    }
+    
+    
+    
+    // MARK: - Convenience methods
+    /**
+     Will fetch weather silently
+     */
+    func fetchWeatherForFavourites() {
+        let fav = CDM.sharedInstance.getFavouriteCities()
+        
+        for city in fav where city.id != nil {
+            executeEndpoint(Endpoints.GetCurrentWeather, withParameters: ["id" : city.id!, "units" : "metric"], completion: { (response, error) in
+                if let weatherObj = response as? [String : AnyObject] {
+                    city.mapJSON(weatherObj)
+                    CDM.sharedInstance.saveContext()
+                }
+            })
         }
         
     }

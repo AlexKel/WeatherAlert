@@ -1,4 +1,5 @@
 PODS:
+  - HanekeSwift (0.10.1)
   - ObjectMapper (1.2.0)
   - OHHTTPStubs (5.0.0):
     - OHHTTPStubs/Default (= 5.0.0)
@@ -13,15 +14,20 @@ PODS:
   - OHHTTPStubs/NSURLSession (5.0.0):
     - OHHTTPStubs/Core
   - OHHTTPStubs/OHPathHelpers (5.0.0)
+  - RNActivityView (0.0.6)
 
 DEPENDENCIES:
+  - HanekeSwift
   - ObjectMapper
   - OHHTTPStubs
+  - RNActivityView
 
 SPEC CHECKSUMS:
+  HanekeSwift: 08e47d3d0f2899ec58e5d257beba0de619aca9e8
   ObjectMapper: b1e9c7c8a9f6400b72690c80072c131504caa66f
   OHHTTPStubs: a5d2e9eea07869d42ec03338325f398bc520e159
+  RNActivityView: 889126dc047fc6fa10aac88a13ebff677c53bf82
 
-PODFILE CHECKSUM: 8616a0cb3b8284e7d383ca8e9c10f036bc79daf2
+PODFILE CHECKSUM: 4b7790e2921384d827b35df6e898f7493026dd2a
 
 COCOAPODS: 1.0.0

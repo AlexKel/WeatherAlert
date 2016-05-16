@@ -9,37 +9,38 @@
 import Foundation
 import ObjectMapper
 
-class City : Mappable{
+class City : JSONMappableManagedObject {
     
     var id: Int?
     var name: String?
     var country: String?
     var coord: Coord?
     
-    required init?(_ map: Map) {
-        
+    init(jsonObject: [String : AnyObject]){
+        mapJSON(jsonObject)
     }
     
-    func mapping(map: Map) {
-        id      <- map["_id"]
-        name    <- map["name"]
-        country <- map["country"]
-        coord   <- map["coord"]
+    func mapJSON(object: [String : AnyObject]) {
+        id = object["_id"] as? Int
+        name = object["name"] as? String
+        country = object["country"] as? String
+        if let coord = object["coord"] as? [String : AnyObject] {
+            self.coord = Coord(jsonObject: coord)
+        }
     }
 }
 
-class Coord : Mappable {
+class Coord : JSONMappableManagedObject {
     
     var lon: Double?
     var lat: Double?
     
-    required init?(_ map: Map) {
-        
+    func mapJSON(object: [String : AnyObject]) {
+        lon = object["lon"] as? Double
+        lat = object["lat"] as? Double
     }
     
-    
-    func mapping(map: Map) {
-        lon <- map["lon"]
-        lat <- map["lat"]
+    init(jsonObject: [String : AnyObject]) {
+        mapJSON(jsonObject)
     }
 }

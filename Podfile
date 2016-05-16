@@ -9,6 +9,8 @@ target 'WeatherAlert' do
 
   # Pods for WeatherAlert
   pod 'ObjectMapper'
+  pod 'RNActivityView'
+  pod 'HanekeSwift'
   
   target 'WeatherAlertTests' do
     inherit! :search_paths

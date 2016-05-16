@@ -36,4 +36,23 @@ extension NSManagedObject {
             return nil
         }
     }
+    
+    class func fetch(id: Int, context: NSManagedObjectContext = CDM.sharedInstance.managedObjectContext) -> NSManagedObject? {
+        // search in CD First
+        if let className = NSStringFromClass(self).componentsSeparatedByString(".").last {
+            let fetch = NSFetchRequest(entityName: className)
+            fetch.predicate = NSPredicate(format: "id == %d", id)
+            do {
+                if let results = try context.executeFetchRequest(fetch) as? [CityWeather], first = results.first {
+                    return first
+                }
+                
+            } catch let nserror as NSError {
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+        
+        return nil
+    }
+    
 }
