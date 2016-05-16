@@ -1,5 +1,5 @@
 # WeatherAlert
-
+Note: Travis not yet configured correctly :( Tests are passing in Xcode
 ![](https://travis-ci.org/AlexKel/WeatherAlert.svg?branch=develop)
 
 ### Requirements
