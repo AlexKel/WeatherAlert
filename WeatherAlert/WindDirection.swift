@@ -1,9 +1,14 @@
-//: This playground is for wind direction image handler
+//
+//  WindDirection.swift
+//  WeatherAlert
+//
+//  Created by Aleksandr Kelbas on 16/05/2016.
+//  Copyright © 2016 Motionly Ltd. All rights reserved.
+//
 
+import Foundation
 import UIKit
-
-
-
+import CoreGraphics
 
 class WindDirection {
     class func imageOfSize(size: CGSize, direction: Double, color: UIColor = UIColor.whiteColor()) -> UIImage {
@@ -67,12 +72,3 @@ class WindDirection {
         return image
     }
 }
-
-
-let size = CGSizeMake(100, 100)
-let degrees: Double = 320.004
-
-let image = WindDirection.imageOfSize(size, direction: degrees)
-
-
-
