@@ -22,7 +22,7 @@ class WindDirection {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .Center
         let attrs = [
-            NSFontAttributeName: UIFont(name: "HelveticaNeue-Thin", size: 5)!,
+            NSFontAttributeName: UIFont(name: "HelveticaNeue", size: 6)!,
             NSParagraphStyleAttributeName: paragraphStyle,
             NSForegroundColorAttributeName : color]
         
