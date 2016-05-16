@@ -20,11 +20,6 @@ class CityListHandlerTests: XCTestCase {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         // city list will be nil if it failed to load file
-        CDM.sharedInstance.deleteObjects(entityName: "CityWeather")
-        CDM.sharedInstance.saveContext()
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: CityList.sharedInstance.kCityListDidLoadCitiesToCoreDataKey)
-        NSUserDefaults.standardUserDefaults().synchronize()
-        XCTAssertNotNil(cityList, "CityList failed to load from json file")
     }
     
     override func tearDown() {
