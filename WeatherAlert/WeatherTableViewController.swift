@@ -117,6 +117,14 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
         }
     
     }
+    
+    
+    // MARK: - Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let dest = segue.destinationViewController as? WeatherForecastTableViewController, cell = sender as? UITableViewCell, indexPath = tableView.indexPathForCell(cell), cityInfo = fetchedResultsController?.fetchedObjects?[indexPath.row] as? CityWeather {
+            dest.city = cityInfo
+        }
+    }
 
 }
 
