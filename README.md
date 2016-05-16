@@ -1,4 +1,5 @@
 # WeatherAlert
+[![Build Status](https://travis-ci.org/AlexKel/WeatherAlert.svg?branch=develop)](https://travis-ci.org/AlexKel/WeatherAlert)
 
 ### Requirements
 * iOS 8.0
