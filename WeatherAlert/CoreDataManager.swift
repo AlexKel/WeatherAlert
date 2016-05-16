@@ -33,6 +33,18 @@ class CDM {
         // Create the coordinator and store
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
+        
+        let fileManager = NSFileManager.defaultManager()
+        if fileManager.fileExistsAtPath(url.path!) == false {
+            if let preloadedStoreURL = NSBundle.mainBundle().URLForResource("SingleViewCoreData_preloaded", withExtension: ".sqlite") {
+                do {
+                    try fileManager.copyItemAtURL(preloadedStoreURL, toURL: url)
+                } catch let err as NSError {
+                    NSLog("Unresolved error \(err), \(err.userInfo)")
+                }
+            }
+        }
+        
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
             try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)

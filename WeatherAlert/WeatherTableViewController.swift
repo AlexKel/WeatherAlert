@@ -36,15 +36,6 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.view.showActivityViewWithLabel("Fetching cities...")
-        CityList.sharedInstance.loadCitiesToCoreData { [weak self] (finished) in
-            self?.navigationController?.view.hideActivityView()
-            if !finished {
-                let alertController = UIAlertController(title: "Failed to load cities", message: nil, preferredStyle: .Alert)
-                alertController.addAction(UIAlertAction(title: "Dismiss", style: .Cancel, handler: nil))
-                self?.presentViewController(alertController, animated: true, completion: nil)
-            }
-        }
     }
     
     private func setupFetchedResultsController() {

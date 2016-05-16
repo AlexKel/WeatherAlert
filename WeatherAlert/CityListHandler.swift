@@ -52,6 +52,7 @@ class CityList {
      
      - parameter completion: This block is called when parsing of JSON file finishes and provides a list of cities to work with
      */
+    @available(*, unavailable, message="Really bad performance with large JSON file, database is now pre-populated and stored as a resource")
     func load(completion: ((cities: [[String : AnyObject]]?)->())?) {
         dispatch_async(backgroundQueue, { [weak self] in
             do {
@@ -77,6 +78,7 @@ class CityList {
      
      - parameter completion: Block is called on completion. `finished` is `true` if there were no errors
      */
+    @available(*, unavailable, message="Really bad performance with large JSON file, database is now pre-populated and stored as a resource")
     func loadCitiesToCoreData(completion:((finished: Bool) -> ())?) {
         guard self.jsonString != nil else {
             completion?(finished: false)
