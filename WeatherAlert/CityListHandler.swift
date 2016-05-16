@@ -87,16 +87,16 @@ class CityList {
             completion?(finished: true)
             return
         }
-        beginBackgroundTask()
+        
         dispatch_async(backgroundQueue, { [unowned self] in
-            
+            self.beginBackgroundTask()
             do {
                 let jsonObject = try NSJSONSerialization.JSONObjectWithData(self.jsonString!.dataUsingEncoding(NSUTF8StringEncoding)!, options: .MutableContainers)
                 if let arr = jsonObject as? [[String : AnyObject]] {
                     let tempContext = CDM.sharedInstance.temporaryContext()
                     tempContext.performBlock{
                         for obj in arr {
-                            CityWeather(jsonObject: obj, context: tempContext)
+                           CityWeather(jsonObject: obj, context: tempContext)
                         }
                         
                         //save temp context
@@ -125,9 +125,9 @@ class CityList {
                     completion?(finished: false)
                 })
             }
-            
+          self.endBackgroundTask()
         })
-        endBackgroundTask()
+        
     }
     
     /**
