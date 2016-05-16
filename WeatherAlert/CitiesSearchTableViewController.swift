@@ -61,17 +61,31 @@ class CitiesSearchTableViewController: UITableViewController, UISearchResultsUpd
         delegate?.citiesSearchController(self, didSelectCity: cityInfo)
     }
     
+    
+    
     // MARK: - Search results
+    private var oldSearchText: String?
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        guard searchController.searchBar.text?.characters.count > 0 else {
+        let text = searchController.searchBar.text
+        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(CitiesSearchTableViewController.searchForCityName(_:)), object: oldSearchText)
+        oldSearchText = text
+        performSelector(#selector(CitiesSearchTableViewController.searchForCityName(_:)), withObject: text, afterDelay: 1.0)
+    }
+    
+    func searchForCityName(text: String?) {
+        guard text?.characters.count > 0 else {
             cities = []
             tableView.reloadData()
             return
         }
-        
-        CityList.sharedInstance.search(name: searchController.searchBar.text!) { [weak self] cities in
+        view.showActivityView()
+        CityList.sharedInstance.search(name: text!) { [weak self] cities in
             self?.cities = cities
-            self?.tableView.reloadData()
+            dispatch_async(dispatch_get_main_queue(), {
+                self?.view.hideActivityView()
+                self?.tableView.reloadData()
+            })
         }
+
     }
 }
