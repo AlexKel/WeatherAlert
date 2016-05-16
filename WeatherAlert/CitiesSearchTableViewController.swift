@@ -69,7 +69,7 @@ class CitiesSearchTableViewController: UITableViewController, UISearchResultsUpd
         let text = searchController.searchBar.text
         NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(CitiesSearchTableViewController.searchForCityName(_:)), object: oldSearchText)
         oldSearchText = text
-        performSelector(#selector(CitiesSearchTableViewController.searchForCityName(_:)), withObject: text, afterDelay: 1.0)
+        performSelector(#selector(CitiesSearchTableViewController.searchForCityName(_:)), withObject: text, afterDelay: 0.5)
     }
     
     func searchForCityName(text: String?) {
