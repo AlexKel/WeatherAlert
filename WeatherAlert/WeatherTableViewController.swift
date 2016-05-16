@@ -30,6 +30,8 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
         navigationItem.titleView = searchController.searchBar
         
         setupFetchedResultsController()
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .Plain, target: nil, action: nil)
     }
     
     override func viewDidAppear(animated: Bool) {

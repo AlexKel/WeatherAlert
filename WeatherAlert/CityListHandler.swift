@@ -155,7 +155,7 @@ class CityList {
         let fetch = NSFetchRequest(entityName: "CityWeather")
         fetch.predicate = NSPredicate(format: "name contains[c] %@", searchName)
         fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        fetch.fetchLimit = 10
+        fetch.fetchLimit = 50
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetch) { (asynchronousFetchResult) -> Void in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 if let cities = asynchronousFetchResult.finalResult as? [CityWeather] {
