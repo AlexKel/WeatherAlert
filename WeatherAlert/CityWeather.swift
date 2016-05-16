@@ -14,6 +14,7 @@ class CityWeather: NSManagedObject, JSONMappableManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
     func mapJSON(object: [String : AnyObject]) {
+        
         dt = object["dt"] as? Int
         name = object["name"] as? String
         id = object["id"] as? Int
@@ -29,11 +30,11 @@ class CityWeather: NSManagedObject, JSONMappableManagedObject {
         }
         
         if let weatherArray = object["weather"] as? [[String : AnyObject]], weather = weatherArray.first {
-            self.weather = Weather(jsonObject: weather)
+            self.weather = Weather(jsonObject: weather, context: self.managedObjectContext!)
         }
         
         if let windObject = object["wind"] as? [String : AnyObject] {
-            wind = Wind(jsonObject: windObject)
+            wind = Wind(jsonObject: windObject, context: self.managedObjectContext!)
         }
     }
 }
