@@ -82,6 +82,20 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
         return cell
     }
     
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            if let cityInfo = fetchedResultsController?.fetchedObjects?[indexPath.row] as? CityWeather {
+                tableView.beginUpdates()
+                
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Left)
+                cityInfo.favourite = false
+                CDM.sharedInstance.saveContext()
+                
+                tableView.endUpdates()
+            }
+        }
+    }
+    
     // MARK: - Cities search delegate
     func citiesSearchController(controller: CitiesSearchTableViewController, didSelectCity city: CityWeather) {
         searchController.active = false
@@ -122,8 +136,27 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
 }
 
 extension WeatherTableViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case NSFetchedResultsChangeType.Insert:
+            if let insertIndexPath = newIndexPath {
+                self.tableView.insertRowsAtIndexPaths([insertIndexPath], withRowAnimation: .Fade)
+            }
+        case NSFetchedResultsChangeType.Delete:
+            if let deleteIndexPath = indexPath {
+                self.tableView.deleteRowsAtIndexPaths([deleteIndexPath], withRowAnimation: .Fade)
+            }
+        default:
+            break
+        }
+    }
+    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        tableView.reloadData()
+        tableView.endUpdates()
     }
 }
 
