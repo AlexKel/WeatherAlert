@@ -94,7 +94,7 @@ class CityList {
                 let jsonObject = try NSJSONSerialization.JSONObjectWithData(self.jsonString!.dataUsingEncoding(NSUTF8StringEncoding)!, options: .MutableContainers)
                 if let arr = jsonObject as? [[String : AnyObject]] {
                     let tempContext = CDM.sharedInstance.temporaryContext()
-                    tempContext.performBlock{
+                    tempContext.performBlockAndWait{
                         for obj in arr {
                            CityWeather(jsonObject: obj, context: tempContext)
                         }
@@ -105,16 +105,29 @@ class CityList {
                         } catch {
                             let nserror = error as NSError
                             NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                            completion?(finished: false)
+                            dispatch_async(dispatch_get_main_queue(), {
+                                self.endBackgroundTask()
+                                completion?(finished: false)
+                            })
                             return
                         }
                         
-                        CDM.sharedInstance.managedObjectContext.performBlock{
-                            CDM.sharedInstance.saveContext()
+                        CDM.sharedInstance.managedObjectContext.performBlockAndWait{
+                            do {
+                                try CDM.sharedInstance.managedObjectContext.save()
+                            } catch {
+                                // Replace this implementation with code to handle the error appropriately.
+                                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                                let nserror = error as NSError
+                                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                                abort()
+                            }
+                            
                             NSUserDefaults.standardUserDefaults().setBool(true, forKey: self.kCityListDidLoadCitiesToCoreDataKey)
                             NSUserDefaults.standardUserDefaults().synchronize()
+                            self.endBackgroundTask()
                             completion?(finished: true)
-                            
+ 
                         }
                     }
                     
@@ -122,10 +135,11 @@ class CityList {
             } catch let err as NSError {
                 dispatch_async(dispatch_get_main_queue(), {
                     NSLog("Unresolved error \(err), \(err.userInfo)")
+                    self.endBackgroundTask()
                     completion?(finished: false)
                 })
             }
-          self.endBackgroundTask()
+          
         })
         
     }
@@ -137,36 +151,28 @@ class CityList {
      - parameter completion: results are passed to this block on completion
      */
     func search(name searchName: String, completion: (cities: [CityWeather])->()) {
-        dispatch_async(backgroundQueue, {
-            
-            let fetch = NSFetchRequest(entityName: "CityWeather")
-            fetch.predicate = NSPredicate(format: "name contains[c] %@", searchName)
-            fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-            fetch.returnsObjectsAsFaults = false
-            var searchResult: [CityWeather] = []
-            
-            CDM.sharedInstance.managedObjectContext.performBlock({
-                do {
-                    if let cities = try CDM.sharedInstance.managedObjectContext.executeFetchRequest(fetch) as? [CityWeather] {
-                        searchResult = cities
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue(), {
-                        completion(cities: searchResult)
-                    })
-                } catch let err as NSError{
-                    NSLog("Unresolved error \(err), \(err.userInfo)")
-                    dispatch_async(dispatch_get_main_queue(), {
-                        completion(cities: searchResult)
-                    })
+        
+        let fetch = NSFetchRequest(entityName: "CityWeather")
+        fetch.predicate = NSPredicate(format: "name contains[c] %@", searchName)
+        fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetch.fetchLimit = 10
+        let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetch) { (asynchronousFetchResult) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                if let cities = asynchronousFetchResult.finalResult as? [CityWeather] {
+                    completion(cities: cities)
+                } else {
+                    completion(cities: [])
                 }
-
             })
-            
-            
-            
-            
-        })
+        }
+        
+        do {
+            // Execute Asynchronous Fetch Request
+            try CDM.sharedInstance.managedObjectContext.executeRequest(asynchronousFetchRequest)
+        } catch {
+            let fetchError = error as NSError
+            print("\(fetchError), \(fetchError.userInfo)")
+        }
     }
     
     private func beginBackgroundTask() {

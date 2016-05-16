@@ -86,51 +86,51 @@ class CityListHandlerTests: XCTestCase {
     func testCityListSearch() {
         
         // load cities first
-        var expectation = expectationWithDescription("DidLoad cities")
+        let expectation1 = expectationWithDescription("DidLoad cities")
         cityList?.loadCitiesToCoreData { finished in
             
             XCTAssertTrue(finished, "There was an error storing all cities to core data")
             XCTAssertTrue(NSUserDefaults.standardUserDefaults().boolForKey(self.cityList!.kCityListDidLoadCitiesToCoreDataKey))
 
-            expectation.fulfill()
+            expectation1.fulfill()
         }
-        waitForExpectationsWithTimeout(30, handler: nil)
+        waitForExpectationsWithTimeout(60, handler: nil)
     
         // Search for London
-        expectation = expectationWithDescription("Did found cities matching pattern 'London'")
+        let expectation2 = expectationWithDescription("Did found cities matching pattern 'London'")
         self.cityList?.search(name: "London") { cities in
             XCTAssertGreaterThan(cities.count, 1, "There must be at least 1 city called London")
-            expectation.fulfill()
+            expectation2.fulfill()
         }
         waitForExpectationsWithTimeout(5, handler: nil)
         
         // Search for Vilnius
-        expectation = expectationWithDescription("Did found cities matching pattern 'Vilnius'")
+        let expectation3 = expectationWithDescription("Did found cities matching pattern 'Vilnius'")
         self.cityList?.search(name: "Vilnius") { cities in
             XCTAssertNotNil(cities, "No cities found for search 'Vilnius'")
             XCTAssertEqual(cities.count, 1, "There should be 1 city named 'Vilnius'")
-            expectation.fulfill()
+            expectation3.fulfill()
         }
         waitForExpectationsWithTimeout(5, handler: nil)
         
         // search for 'ilniu' should result in 'Vilnius', no other city matches this pattern
-        expectation = expectationWithDescription("Did found cities matching pattern 'ilniu'")
+        let expectation4 = expectationWithDescription("Did found cities matching pattern 'ilniu'")
         cityList?.search(name: "ilniu") { cities in
             XCTAssertEqual(cities.count, 1, "There should be 1 city named 'ilniu'")
             let city = cities.first
             XCTAssertEqual(city?.name, "Vilnius")
             XCTAssertEqual(city?.country, "LT")
             XCTAssertEqual(city?.id, 593116)
-            expectation.fulfill()
+            expectation4.fulfill()
         }
         waitForExpectationsWithTimeout(5, handler: nil)
         
         // Search for some weird stuff
-        expectation = expectationWithDescription("Did not found cities matching pattern 'some-random-stuff'")
+        let expectation5 = expectationWithDescription("Did not found cities matching pattern 'some-random-stuff'")
         cityList?.search(name: "some-random-stuff") { cities in
             let count = cities.count
             XCTAssertEqual(count, 0, "Cities must be an empty array if no pattern found")
-            expectation.fulfill()
+            expectation5.fulfill()
         }
         waitForExpectationsWithTimeout(5, handler: nil)
     }
