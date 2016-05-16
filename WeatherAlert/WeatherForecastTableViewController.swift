@@ -85,6 +85,13 @@ class WeatherForecastTableViewController: UITableViewController {
             cell.windSpeedLabel.text = nil
         }
         
+        if let windDirection = wind?["deg"] as? Double {
+            let image = WindDirection.imageOfSize(cell.windDirectionImage.bounds.size, direction: windDirection, color: UIColor.lightGrayColor())
+            cell.windDirectionImage.image = image
+        } else {
+            cell.windDirectionImage.image = nil
+        }
+        
 
         return cell
     }

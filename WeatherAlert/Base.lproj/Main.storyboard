@@ -113,20 +113,28 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="wind mps: 4.56" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2YM-iY-MCV">
-                                            <rect key="frame" x="161" y="10" width="429" height="17"/>
+                                            <rect key="frame" x="161" y="10" width="98" height="17"/>
                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WBn-oZ-mNq">
+                                            <rect key="frame" x="269" y="10" width="39" height="39"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" secondItem="WBn-oZ-mNq" secondAttribute="height" multiplier="1:1" id="grl-Yf-Noa"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="2YM-iY-MCV" firstAttribute="top" secondItem="rl5-Fo-h3N" secondAttribute="top" constant="10" id="GF6-4n-7f6"/>
-                                        <constraint firstAttribute="trailing" secondItem="2YM-iY-MCV" secondAttribute="trailing" constant="10" id="GNE-6E-chx"/>
+                                        <constraint firstItem="WBn-oZ-mNq" firstAttribute="leading" secondItem="2YM-iY-MCV" secondAttribute="trailing" constant="10" id="GeX-rm-ESi"/>
                                         <constraint firstItem="RM5-Wb-niW" firstAttribute="width" secondItem="oaN-vu-jE4" secondAttribute="width" id="Hph-EH-J14"/>
+                                        <constraint firstAttribute="bottom" secondItem="WBn-oZ-mNq" secondAttribute="bottom" constant="10" id="S7s-vx-vjG"/>
                                         <constraint firstItem="IhF-Xv-SSS" firstAttribute="top" secondItem="rl5-Fo-h3N" secondAttribute="top" constant="10" id="SMx-TY-jge"/>
                                         <constraint firstItem="IhF-Xv-SSS" firstAttribute="leading" secondItem="rl5-Fo-h3N" secondAttribute="leading" constant="10" id="TBw-4w-6RZ"/>
                                         <constraint firstAttribute="bottom" secondItem="RM5-Wb-niW" secondAttribute="bottom" constant="10" id="Wxv-HL-IHp"/>
                                         <constraint firstItem="RM5-Wb-niW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="oaN-vu-jE4" secondAttribute="bottom" id="gIU-Ns-23w"/>
+                                        <constraint firstItem="WBn-oZ-mNq" firstAttribute="top" secondItem="rl5-Fo-h3N" secondAttribute="top" constant="10" id="giF-fB-gDK"/>
                                         <constraint firstItem="oaN-vu-jE4" firstAttribute="leading" secondItem="IhF-Xv-SSS" secondAttribute="trailing" constant="10" id="hdD-MI-HcH"/>
                                         <constraint firstItem="RM5-Wb-niW" firstAttribute="leading" secondItem="IhF-Xv-SSS" secondAttribute="trailing" constant="10" id="jtN-FA-BFU"/>
                                         <constraint firstItem="oaN-vu-jE4" firstAttribute="top" secondItem="rl5-Fo-h3N" secondAttribute="top" constant="10" id="nCD-ha-Eoe"/>
@@ -138,6 +146,7 @@
                                     <outlet property="dateLabel" destination="oaN-vu-jE4" id="b1h-OG-HCO"/>
                                     <outlet property="temperatureLabel" destination="RM5-Wb-niW" id="sXf-vm-Pcw"/>
                                     <outlet property="weatherImageView" destination="IhF-Xv-SSS" id="qUj-sm-pHk"/>
+                                    <outlet property="windDirectionImage" destination="WBn-oZ-mNq" id="dyS-d9-4zh"/>
                                     <outlet property="windSpeedLabel" destination="2YM-iY-MCV" id="61B-Az-a3o"/>
                                 </connections>
                             </tableViewCell>

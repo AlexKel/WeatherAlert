@@ -15,6 +15,7 @@ class ForecastWeatherTableViewCell: UITableViewCell {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var windSpeedLabel: UILabel!
     
+    @IBOutlet weak var windDirectionImage: UIImageView!
     
     func setDate(dt: Int) {
         let df = NSDateFormatter()
