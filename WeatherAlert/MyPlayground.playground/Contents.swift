@@ -17,33 +17,35 @@ class WindDirection {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .Center
         let attrs = [
-            NSFontAttributeName: UIFont(name: "HelveticaNeue-Thin", size: 10)!,
+            NSFontAttributeName: UIFont(name: "HelveticaNeue-Thin", size: 5)!,
             NSParagraphStyleAttributeName: paragraphStyle,
             NSForegroundColorAttributeName : color]
         
+        let dashSize: CGFloat = 4.0
+        
         // north
         CGContextMoveToPoint(ctx, CGRectGetMidX(rect), CGRectGetMinY(rect))
-        CGContextAddLineToPoint(ctx, CGRectGetMidX(rect), CGRectGetMinY(rect) + 10)
+        CGContextAddLineToPoint(ctx, CGRectGetMidX(rect), CGRectGetMinY(rect) + dashSize)
         var string = "N"
-        string.drawWithRect(CGRect(x: 0, y: 12, width: size.width, height: size.height), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
+        string.drawWithRect(CGRect(x: 0, y: dashSize + 2, width: size.width, height: size.height), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
         
         // south
         CGContextMoveToPoint(ctx, CGRectGetMidX(rect), CGRectGetMaxY(rect))
-        CGContextAddLineToPoint(ctx, CGRectGetMidX(rect), CGRectGetMaxY(rect) - 10)
+        CGContextAddLineToPoint(ctx, CGRectGetMidX(rect), CGRectGetMaxY(rect) - dashSize)
         string = "S"
-        string.drawWithRect(CGRect(x: 0, y: CGRectGetMaxY(rect) - 24, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
+        string.drawWithRect(CGRect(x: 0, y: CGRectGetMaxY(rect) - dashSize - 14, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
         
         // west
         CGContextMoveToPoint(ctx, CGRectGetMinX(rect), CGRectGetMidY(rect))
-        CGContextAddLineToPoint(ctx, CGRectGetMinX(rect) + 10, CGRectGetMidY(rect))
+        CGContextAddLineToPoint(ctx, CGRectGetMinX(rect) + dashSize, CGRectGetMidY(rect))
         string = "W"
-        string.drawWithRect(CGRect(x: -CGRectGetMidX(rect) + 20, y: CGRectGetMidY(rect) - 6, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
+        string.drawWithRect(CGRect(x: -CGRectGetMidX(rect) + dashSize + 10, y: CGRectGetMidY(rect) - 6, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
         
         // east
         CGContextMoveToPoint(ctx, CGRectGetMaxX(rect), CGRectGetMidY(rect))
-        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect) - 10, CGRectGetMidY(rect))
+        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect) - dashSize, CGRectGetMidY(rect))
         string = "E"
-        string.drawWithRect(CGRect(x: CGRectGetMidX(rect) - 18, y: CGRectGetMidY(rect) - 6, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
+        string.drawWithRect(CGRect(x: CGRectGetMidX(rect) - dashSize - 8, y: CGRectGetMidY(rect) - 6, width: 100, height: 100), options: .UsesLineFragmentOrigin, attributes: attrs, context: nil)
         
         
         
@@ -60,7 +62,6 @@ class WindDirection {
         CGContextSetStrokeColorWithColor(ctx, UIColor.redColor().CGColor)
         CGContextMoveToPoint(ctx, rad, 0.0)
         CGContextAddLineToPoint(ctx, CGRectGetMidX(rect), CGRectGetMinY(rect))
-        CGContextSetLineWidth(ctx, 2)
         CGContextStrokePath(ctx)
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -69,7 +70,7 @@ class WindDirection {
 }
 
 
-let size = CGSizeMake(100, 100)
+let size = CGSizeMake(39, 39)
 let degrees: Double = 320.004
 
 let image = WindDirection.imageOfSize(size, direction: degrees)
