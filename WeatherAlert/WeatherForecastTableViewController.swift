@@ -22,7 +22,7 @@ class WeatherForecastTableViewController: UITableViewController {
         
         if let idx = city.id {
             view.showActivityViewWithLabel("Getting forecast")
-            API.sharedInstance.executeEndpoint(Endpoints.GetWeatherForecast, withParameters: ["id" : idx, "unit" : "metric"]) { [weak self] (response, error) in
+            API.sharedInstance.executeEndpoint(Endpoints.GetWeatherForecast, withParameters: ["id" : idx, "units" : "metric"]) { [weak self] (response, error) in
                 self?.view.hideActivityView()
                 if let responseObj = response as? [String : AnyObject], list = responseObj["list"] as? [[String : AnyObject]] where error == nil {
                     self?.forecast = list
@@ -71,7 +71,7 @@ class WeatherForecastTableViewController: UITableViewController {
         }
         
         if let temp = main?["temp"] as? Double {
-            cell.temperatureLabel.text = "\(Int(convertKelvinToCelsius(temp)))"
+            cell.temperatureLabel.text = "\(Int(temp))"
         } else {
             cell.temperatureLabel.text = nil
         }

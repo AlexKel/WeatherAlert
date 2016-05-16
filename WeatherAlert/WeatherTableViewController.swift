@@ -95,7 +95,7 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
         guard city.name != nil else {return}
         
         navigationController?.view.showActivityViewWithLabel("Loading", detailLabel: "Please wait")
-        API.sharedInstance.executeEndpoint(Endpoints.GetCurrentWeather, withParameters: ["id" : city.id!, "unit" : "metric"]) { [weak self] response, error in
+        API.sharedInstance.executeEndpoint(Endpoints.GetCurrentWeather, withParameters: ["id" : city.id!, "units" : "metric"]) { [weak self] response, error in
             self?.navigationController?.view.hideActivityView()
             if let weatherObject = response as? [String : AnyObject] where error == nil {
             
