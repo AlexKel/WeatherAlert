@@ -70,8 +70,13 @@ class CitiesSearchTableViewController: UITableViewController, UISearchResultsUpd
         }
         
         CityList.sharedInstance.search(name: searchController.searchBar.text!) { [weak self] cities in
-            self?.cities = cities
-            self?.tableView.reloadData()
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+                self?.cities = cities
+                dispatch_async(dispatch_get_main_queue(), {
+                    self?.tableView.reloadData()
+                })  
+            })
+            
         }
     }
 }

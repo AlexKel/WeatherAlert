@@ -159,13 +159,11 @@ class CityList {
         fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         fetch.fetchLimit = 50
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetch) { (asynchronousFetchResult) -> Void in
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                if let cities = asynchronousFetchResult.finalResult as? [CityWeather] {
-                    completion(cities: cities)
-                } else {
-                    completion(cities: [])
-                }
-            })
+            if let cities = asynchronousFetchResult.finalResult as? [CityWeather] {
+                completion(cities: cities)
+            } else {
+                completion(cities: [])
+            }
         }
         
         do {
@@ -175,6 +173,7 @@ class CityList {
             let fetchError = error as NSError
             print("\(fetchError), \(fetchError.userInfo)")
         }
+
     }
     
     private func beginBackgroundTask() {
