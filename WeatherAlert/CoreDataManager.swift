@@ -61,6 +61,12 @@ class CDM {
         return managedObjectContext
     }()
     
+    func temporaryContext() -> NSManagedObjectContext {
+        let ctx = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        ctx.parentContext = managedObjectContext
+        return ctx
+    }
+    
     // MARK: - Core Data Saving support
     
     func saveContext () {
@@ -96,6 +102,26 @@ class CDM {
                 print("failed to delete objects for entity name: \(name). Error: \(err)")
             }
         }
+    }
+    
+    
+    // MARK: - Convenience
+    func getFavouriteCities() -> [CityWeather] {
+        var result: [CityWeather] = []
+        
+        let fetch = NSFetchRequest(entityName: "CityWeather")
+        fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetch.predicate = NSPredicate(format: "favourite == %@", true)
+        
+        do {
+            if let queryResults = try managedObjectContext.executeFetchRequest(fetch) as? [CityWeather] {
+                result = queryResults
+            }
+        } catch let err as NSError {
+            NSLog("Unresolved error \(err), \(err.userInfo)")
+        }
+        
+        return result
     }
     
 

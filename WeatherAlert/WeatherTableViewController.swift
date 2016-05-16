@@ -32,12 +32,28 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
         setupFetchedResultsController()
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.view.showActivityViewWithLabel("Fetching cities...")
+        CityList.sharedInstance.loadCitiesToCoreData { [weak self] (finished) in
+            self?.navigationController?.view.hideActivityView()
+            if !finished {
+                let alertController = UIAlertController(title: "Failed to load cities", message: nil, preferredStyle: .Alert)
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: .Cancel, handler: nil))
+                self?.presentViewController(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+    
     private func setupFetchedResultsController() {
         let fetchRequest = NSFetchRequest(entityName: "CityWeather")
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CDM.sharedInstance.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchRequest.predicate = NSPredicate(format: "favourite == %@", true)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CDM.sharedInstance.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Root")
         fetchedResultsController?.delegate = self
+        try! fetchedResultsController?.performFetch()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,6 +75,10 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
             if let icon = weatherInfo.weather?.icon, imageURL = NSURL(string: "http://openweathermap.org/img/w/\(icon).png") {
                 cell.weatherImageView.hnk_setImageFromURL(imageURL)
             }
+            if let temp = weatherInfo.temp {
+                cell.degreesLabel.text = "\(temp.intValue)"
+            }
+            
             
         } else {
             cell.cityNameLabel.text = nil
@@ -70,14 +90,24 @@ class WeatherTableViewController: UITableViewController, CitiesSearchTableViewCo
     }
     
     // MARK: - Cities search delegate
-    func citiesSearchController(controller: CitiesSearchTableViewController, didSelectCity city: City) {
+    func citiesSearchController(controller: CitiesSearchTableViewController, didSelectCity city: CityWeather) {
         searchController.active = false
         guard city.name != nil else {return}
         
         navigationController?.view.showActivityViewWithLabel("Loading", detailLabel: "Please wait")
-        API.sharedInstance.executeEndpoint(Endpoints.GetCurrentWeather, withParameters: ["id" : city.name!]) { [weak self] response, error in
+        API.sharedInstance.executeEndpoint(Endpoints.GetCurrentWeather, withParameters: ["id" : city.id!, "unit" : "metric"]) { [weak self] response, error in
+            self?.navigationController?.view.hideActivityView()
             if let weatherObject = response as? [String : AnyObject] where error == nil {
-                CityWeather(jsonObject: weatherObject)
+            
+                if let id = response?["id"] as? Int, cityWeather = CityWeather.fetch(id) as? CityWeather {
+                    cityWeather.mapJSON(weatherObject)
+                    cityWeather.favourite = true
+                } else {
+                    let cityWeather = CityWeather(jsonObject: weatherObject)
+                    cityWeather?.favourite = true
+                }
+                
+                CDM.sharedInstance.saveContext()
             } else {
                 // TODO: Show error aler
                 let alert = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .Alert)

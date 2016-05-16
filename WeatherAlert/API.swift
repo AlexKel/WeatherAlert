@@ -143,5 +143,25 @@ class API {
         }
         
     }
+    
+    
+    
+    // MARK: - Convenience methods
+    /**
+     Will fetch weather silently
+     */
+    func fetchWeatherForFavourites() {
+        let fav = CDM.sharedInstance.getFavouriteCities()
+        
+        for city in fav where city.id != nil {
+            executeEndpoint(Endpoints.GetCurrentWeather, withParameters: ["id" : city.id!, "units" : "metric"], completion: { (response, error) in
+                if let weatherObj = response as? [String : AnyObject] {
+                    city.mapJSON(weatherObj)
+                    CDM.sharedInstance.saveContext()
+                }
+            })
+        }
+        
+    }
 }
 

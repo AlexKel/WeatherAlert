@@ -9,6 +9,7 @@
 import XCTest
 @testable import WeatherAlert
 @testable import ObjectMapper
+import CoreData
 
 class CityListHandlerTests: XCTestCase {
     
@@ -19,6 +20,10 @@ class CityListHandlerTests: XCTestCase {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         // city list will be nil if it failed to load file
+        CDM.sharedInstance.deleteObjects(entityName: "CityWeather")
+        CDM.sharedInstance.saveContext()
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: CityList.sharedInstance.kCityListDidLoadCitiesToCoreDataKey)
+        NSUserDefaults.standardUserDefaults().synchronize()
         XCTAssertNotNil(cityList, "CityList failed to load from json file")
     }
     
@@ -27,35 +32,66 @@ class CityListHandlerTests: XCTestCase {
         super.tearDown()
     }
     
-    func testCityListLoading() {
+    func testCityListLoadToCoreData() {
+        
+            let expectation = self.expectationWithDescription("Cities are loaded to core data from json file")
+            self.cityList?.loadCitiesToCoreData { finished in
+                XCTAssertTrue(finished, "There was an error storing all cities to core data")
+                XCTAssertTrue(NSUserDefaults.standardUserDefaults().boolForKey(self.cityList!.kCityListDidLoadCitiesToCoreDataKey))
+                
+                let testFetch = NSFetchRequest(entityName: "CityWeather")
+                testFetch.fetchLimit = 5
+                let count = CDM.sharedInstance.managedObjectContext.countForFetchRequest(testFetch, error: nil)
+                XCTAssertEqual(count, 5, "There must be 5 cities in fetch")
+                
+                do {
+                    let results = try CDM.sharedInstance.managedObjectContext.executeFetchRequest(testFetch)
+                    XCTAssertTrue(results is [CityWeather])
+                    let firstCity = results.first as? CityWeather
+                    XCTAssertNotNil(firstCity?.name)
+                    XCTAssertNotNil(firstCity?.country)
+                } catch let err as NSError {
+                    XCTFail(err.description)
+                }
+                
+                expectation.fulfill()
+            }
+            self.waitForExpectationsWithTimeout(30, handler: nil)
+        
+        
+    }
     
-        let expectation = expectationWithDescription("City list loaded into memory")
+    func testCityListLoading() {
         // citylist loading must happen in background as it's quite a big file.
-        cityList?.load { cities in
+        let expectation = self.expectationWithDescription("City list loaded into memory")
+        self.cityList?.load { cities in
             
             XCTAssertNotNil(cities, "Cities object must not be nil, it seems json loading failed")
-            XCTAssertGreaterThan(cities!.count, 0, "There must be some cities in the list")
+            XCTAssertGreaterThan(cities?.count ?? 0, 1, "There must be some cities in the list")
             
-            let city = cities?.first
-            XCTAssertEqual(city?.id, 707860)
-            XCTAssertEqual(city?.name, "Hurzuf")
-            XCTAssertEqual(city?.country, "UA")
+            let cityObj = cities?.first
+            let city = City(jsonObject: cityObj ?? [:])
+            XCTAssertEqual(city.id, 707860)
+            XCTAssertEqual(city.name, "Hurzuf")
+            XCTAssertEqual(city.country, "UA")
             
-            let coord = city?.coord
+            let coord = city.coord
             XCTAssertEqual(coord?.lon, 34.283333)
             XCTAssertEqual(coord?.lat, 44.549999)
             expectation.fulfill()
         }
-        waitForExpectationsWithTimeout(30, handler: nil)
+        self.waitForExpectationsWithTimeout(30, handler: nil)
     }
     
     func testCityListSearch() {
         
         // load cities first
         var expectation = expectationWithDescription("DidLoad cities")
-        cityList?.load { cities in
-            XCTAssertNotNil(cities, "Cities object must not be nil, it seems json loading failed")
-            XCTAssertGreaterThan(cities!.count, 0, "There must be some cities in the list")
+        cityList?.loadCitiesToCoreData { finished in
+            
+            XCTAssertTrue(finished, "There was an error storing all cities to core data")
+            XCTAssertTrue(NSUserDefaults.standardUserDefaults().boolForKey(self.cityList!.kCityListDidLoadCitiesToCoreDataKey))
+
             expectation.fulfill()
         }
         waitForExpectationsWithTimeout(30, handler: nil)
@@ -70,7 +106,7 @@ class CityListHandlerTests: XCTestCase {
         
         // Search for Vilnius
         expectation = expectationWithDescription("Did found cities matching pattern 'Vilnius'")
-        self.cityList?.search(name: "Vilnius", country: "LT") { cities in
+        self.cityList?.search(name: "Vilnius") { cities in
             XCTAssertNotNil(cities, "No cities found for search 'Vilnius'")
             XCTAssertEqual(cities.count, 1, "There should be 1 city named 'Vilnius'")
             expectation.fulfill()
@@ -101,13 +137,14 @@ class CityListHandlerTests: XCTestCase {
     
     func testCityObjectMapping() {
         let testCityJSON = "{\"_id\":707860,\"name\":\"Hurzuf\",\"country\":\"UA\",\"coord\":{\"lon\":34.283333,\"lat\":44.549999}}"
-        let city = Mapper<City>().map(testCityJSON)
+        let jsonObject = try! NSJSONSerialization.JSONObjectWithData(testCityJSON.dataUsingEncoding(NSUTF8StringEncoding)!, options: .MutableContainers)
+        let city = City(jsonObject: jsonObject as! [String : AnyObject])
         XCTAssertNotNil(city)
-        XCTAssertEqual(city?.id, 707860)
-        XCTAssertEqual(city?.name, "Hurzuf")
-        XCTAssertEqual(city?.country, "UA")
+        XCTAssertEqual(city.id, 707860)
+        XCTAssertEqual(city.name, "Hurzuf")
+        XCTAssertEqual(city.country, "UA")
         
-        let coord = city?.coord
+        let coord = city.coord
         XCTAssertEqual(coord?.lon, 34.283333)
         XCTAssertEqual(coord?.lat, 44.549999)
         

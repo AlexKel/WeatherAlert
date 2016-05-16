@@ -9,12 +9,12 @@
 import UIKit
 
 protocol CitiesSearchTableViewControllerDelegate : NSObjectProtocol {
-    func citiesSearchController(controller: CitiesSearchTableViewController, didSelectCity city: City)
+    func citiesSearchController(controller: CitiesSearchTableViewController, didSelectCity city: CityWeather)
 }
 
 class CitiesSearchTableViewController: UITableViewController, UISearchResultsUpdating {
 
-    private var cities: [City] = []
+    private var cities: [CityWeather] = []
     weak var delegate: CitiesSearchTableViewControllerDelegate?
     
     override func viewDidLoad() {
@@ -44,7 +44,14 @@ class CitiesSearchTableViewController: UITableViewController, UISearchResultsUpd
 
         // Configure the cell...
         let cityInfo = cities[indexPath.row]
-        cell.textLabel?.text = cityInfo.name! + ", " + cityInfo.country!
+        var text = ""
+        if let name = cityInfo.name {
+            text += name
+        }
+        if let country = cityInfo.country {
+            text += ", \(country)"
+        }
+        cell.textLabel?.text = text
         return cell
     }
     

@@ -35,13 +35,13 @@
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="5" id="oHS-LJ-SJz"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" weight="thin" pointSize="36"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="London" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ETi-0t-Cve">
                                             <rect key="frame" x="104" y="10" width="453" height="39"/>
                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="26"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -62,6 +62,7 @@
                                     <outlet property="cityNameLabel" destination="ETi-0t-Cve" id="PLg-Xs-sol"/>
                                     <outlet property="degreesLabel" destination="SGV-Nx-Nq0" id="ZOS-kb-pSj"/>
                                     <outlet property="weatherImageView" destination="WrZ-JJ-ze7" id="5OB-9b-FIw"/>
+                                    <segue destination="bc3-5U-kyH" kind="show" id="yfK-tV-yxF"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -76,6 +77,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e1r-Nf-dA5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="548" y="752"/>
+        </scene>
+        <!--Table View Controller-->
+        <scene sceneID="srR-eN-ATH">
+            <objects>
+                <tableViewController id="bc3-5U-kyH" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="KdP-Pz-lED">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Cxt-cs-fZx">
+                                <rect key="frame" x="0.0" y="122" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Cxt-cs-fZx" id="rl5-Fo-h3N">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="bc3-5U-kyH" id="UyY-NP-c17"/>
+                            <outlet property="delegate" destination="bc3-5U-kyH" id="idg-uf-9SU"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fPh-GT-768" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1234" y="752"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="oO4-SA-hJ4">
