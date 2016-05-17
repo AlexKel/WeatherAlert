@@ -82,4 +82,28 @@ class CityListHandlerTests: XCTestCase {
         XCTAssertEqual(coord?.lat, 44.549999)
         
     }
+    
+    func testCityListSearchOrdering() {
+        var expectaion = expectationWithDescription("Did found cities for 'piran'")
+        
+        cityList?.search(name: "piran") { cities in
+            XCTAssertGreaterThan(cities.count, 0)
+            let first = cities.first
+            XCTAssertEqual(first?.name, "Piran")
+            
+            expectaion.fulfill()
+        }
+        waitForExpectationsWithTimeout(5, handler: nil)
+        
+        
+        expectaion = expectationWithDescription("Did found cities for 'tri'")
+        cityList?.search(name: "tri") { cities in
+            XCTAssertGreaterThan(cities.count, 0)
+            let first = cities.first
+            XCTAssertEqual(first?.name, "Trieste")
+            expectaion.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(5, handler: nil)
+    }
 }
