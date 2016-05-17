@@ -142,13 +142,17 @@ extension WeatherTableViewController: NSFetchedResultsControllerDelegate {
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
-        case NSFetchedResultsChangeType.Insert:
+        case .Insert:
             if let insertIndexPath = newIndexPath {
                 self.tableView.insertRowsAtIndexPaths([insertIndexPath], withRowAnimation: .Fade)
             }
-        case NSFetchedResultsChangeType.Delete:
+        case .Delete:
             if let deleteIndexPath = indexPath {
                 self.tableView.deleteRowsAtIndexPaths([deleteIndexPath], withRowAnimation: .Fade)
+            }
+        case .Update:
+            if let updatedIndexPath = indexPath {
+                self.tableView.reloadRowsAtIndexPaths([updatedIndexPath], withRowAnimation: .Fade)
             }
         default:
             break
