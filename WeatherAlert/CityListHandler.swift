@@ -155,34 +155,18 @@ class CityList {
     func search(name searchName: String, completion: (cities: [CityWeather])->()) {
         
         let fetch = NSFetchRequest(entityName: "CityWeather")
-        let predicate1 = NSPredicate(format: "name matches[c] %@", searchName)
-        let predicate2 = NSPredicate(format: "name beginswith[c] %@", searchName)
-        let predicate3 = NSPredicate(format: "name contains[c] %@", searchName)
-        fetch.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [predicate1, predicate2, predicate3])
-        
-        
-//        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true) { (name1, name2) -> NSComparisonResult in
-//            
-//            if (name1 as! String).rangeOfString(searchName)?.first < (name2 as! String).rangeOfString(searchName)?.first {
-//                return .OrderedDescending
-//            } else {
-//                return .OrderedAscending
-//            }
-//        }
-//        
-//        fetch.sortDescriptors = [sortDescriptor]
-//        fetch.fetchLimit = 50
+        fetch.predicate = NSPredicate(format: "name beginswith[c] %@", searchName)
+        fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetch.fetchLimit = 50
+
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetch) { (asynchronousFetchResult) -> Void in
             
             if let cities = asynchronousFetchResult.finalResult as? [CityWeather] {
-                let sorted = cities.sort{ (city1, city2) -> Bool in
-                    guard city1.name != searchName else {return true}
-                    return city1.name?.rangeOfString(searchName)?.first < city2.name?.rangeOfString(searchName)?.first
-                }
-                completion(cities: sorted)
+                completion(cities: cities)
             } else {
                 completion(cities: [])
             }
+            
         }
         
         do {

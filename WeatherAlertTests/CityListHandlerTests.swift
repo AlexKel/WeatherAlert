@@ -89,8 +89,7 @@ class CityListHandlerTests: XCTestCase {
         cityList?.search(name: "piran") { cities in
             XCTAssertGreaterThan(cities.count, 0)
             let first = cities.first
-            XCTAssertEqual(first?.name, "Piran")
-            
+            XCTAssertEqual(first?.name, "Pirane")
             expectaion.fulfill()
         }
         waitForExpectationsWithTimeout(5, handler: nil)
@@ -100,7 +99,7 @@ class CityListHandlerTests: XCTestCase {
         cityList?.search(name: "tri") { cities in
             XCTAssertGreaterThan(cities.count, 0)
             let first = cities.first
-            XCTAssertEqual(first?.name, "Trieste")
+            XCTAssertEqual(first?.name, "Tri Duby")
             expectaion.fulfill()
         }
         
