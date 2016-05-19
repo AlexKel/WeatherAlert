@@ -155,15 +155,18 @@ class CityList {
     func search(name searchName: String, completion: (cities: [CityWeather])->()) {
         
         let fetch = NSFetchRequest(entityName: "CityWeather")
-        fetch.predicate = NSPredicate(format: "name contains[c] %@", searchName)
+        fetch.predicate = NSPredicate(format: "name beginswith[c] %@", searchName)
         fetch.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         fetch.fetchLimit = 50
+
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetch) { (asynchronousFetchResult) -> Void in
+            
             if let cities = asynchronousFetchResult.finalResult as? [CityWeather] {
                 completion(cities: cities)
             } else {
                 completion(cities: [])
             }
+            
         }
         
         do {

@@ -48,8 +48,8 @@ class CityListHandlerTests: XCTestCase {
         
         // search for 'ilniu' should result in 'Vilnius', no other city matches this pattern
         let expectation4 = expectationWithDescription("Did found cities matching pattern 'ilniu'")
-        cityList?.search(name: "ilniu") { cities in
-            XCTAssertEqual(cities.count, 1, "There should be 1 city named 'ilniu'")
+        cityList?.search(name: "vilni") { cities in
+            XCTAssertEqual(cities.count, 1, "There should be 1 city named 'Vilnius'")
             let city = cities.first
             XCTAssertEqual(city?.name, "Vilnius")
             XCTAssertEqual(city?.country, "LT")
@@ -81,5 +81,28 @@ class CityListHandlerTests: XCTestCase {
         XCTAssertEqual(coord?.lon, 34.283333)
         XCTAssertEqual(coord?.lat, 44.549999)
         
+    }
+    
+    func testCityListSearchOrdering() {
+        var expectaion = expectationWithDescription("Did found cities for 'piran'")
+        
+        cityList?.search(name: "piran") { cities in
+            XCTAssertGreaterThan(cities.count, 0)
+            let first = cities.first
+            XCTAssertEqual(first?.name, "Pirane")
+            expectaion.fulfill()
+        }
+        waitForExpectationsWithTimeout(5, handler: nil)
+        
+        
+        expectaion = expectationWithDescription("Did found cities for 'tri'")
+        cityList?.search(name: "tri") { cities in
+            XCTAssertGreaterThan(cities.count, 0)
+            let first = cities.first
+            XCTAssertEqual(first?.name, "Tri Duby")
+            expectaion.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(5, handler: nil)
     }
 }

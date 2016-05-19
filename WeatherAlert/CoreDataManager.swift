@@ -116,6 +116,15 @@ class CDM {
         }
     }
     
+    func deleteDatabase() {
+        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
+        do {
+            try NSFileManager.defaultManager().removeItemAtPath(url.path!)
+        } catch let nserror as NSError {
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+    }
+    
     
     // MARK: - Convenience
     func getFavouriteCities() -> [CityWeather] {
