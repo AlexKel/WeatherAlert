@@ -145,7 +145,7 @@ class APITests: XCTestCase {
         let api = API.sharedInstance
         let endpoint = Endpoints.GetCurrentWeather
         let params = [
-            "id" : 2643743
+            "id" : 0
         ]
         let expectation = expectationWithDescription("Did get current weather")
         
@@ -155,7 +155,7 @@ class APITests: XCTestCase {
             let object = response as? [String : AnyObject]
             XCTAssertNotNil(object)
             XCTAssertEqual(object?["name"] as? String, "London")
-            XCTAssertEqual(object?["id"] as? Int, 2643743)
+            XCTAssertEqual(object?["id"] as? Int, 0)
             XCTAssertEqual(object?["dt"] as? Int, 1463308797)
             expectation.fulfill()
         }

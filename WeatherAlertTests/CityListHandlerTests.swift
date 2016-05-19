@@ -48,8 +48,8 @@ class CityListHandlerTests: XCTestCase {
         
         // search for 'ilniu' should result in 'Vilnius', no other city matches this pattern
         let expectation4 = expectationWithDescription("Did found cities matching pattern 'ilniu'")
-        cityList?.search(name: "ilniu") { cities in
-            XCTAssertEqual(cities.count, 1, "There should be 1 city named 'ilniu'")
+        cityList?.search(name: "vilni") { cities in
+            XCTAssertEqual(cities.count, 1, "There should be 1 city named 'Vilnius'")
             let city = cities.first
             XCTAssertEqual(city?.name, "Vilnius")
             XCTAssertEqual(city?.country, "LT")

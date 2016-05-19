@@ -27,15 +27,11 @@ class CoreDataTests: XCTestCase {
         }
         XCTAssertNotNil(cityWeatherObjectJSONString, "Test json object CityWeatherObject failed to load")
         // Clean core data before testing
-        CDM.sharedInstance.deleteObjects(entityName: "CityWeather", "Weather", "Wind")
-        CDM.sharedInstance.saveContext()
     }
     
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         // clear core data after testing
-        CDM.sharedInstance.deleteObjects(entityName: "CityWeather", "Weather", "Wind")
-        CDM.sharedInstance.saveContext()
         super.tearDown()
     }
     
@@ -43,15 +39,18 @@ class CoreDataTests: XCTestCase {
     func testCityWeatherStoring() {
         let coreDataManager = CDM()
         let fetch = NSFetchRequest(entityName: "CityWeather")
+        let id: Int = 0
+        fetch.predicate = NSPredicate(format: "id == %d", id)
         var error: NSError?
         var count = coreDataManager.managedObjectContext.countForFetchRequest(fetch, error: &error)
-        XCTAssertEqual(count, 0, "There shouldn't be any CityWeather objects in core data from the start")
+        XCTAssertEqual(count, 0, "There should be a CityWeather object in core data with id 922337203685")
         
+        // then insert it again
+        var cityWeather = CityWeather(jsonObject: cityWeatherObjectJSONString!, context: coreDataManager.managedObjectContext)
         
-        var cityWeather = CityWeather(jsonObject: cityWeatherObjectJSONString!)
         XCTAssertNotNil(cityWeather, "Inserted object isn't a CityWather object")
         XCTAssertEqual(cityWeather?.name, "London")
-        XCTAssertEqual(cityWeather?.id, 2643743)
+        XCTAssertEqual(cityWeather?.id, id)
         XCTAssertNotNil(cityWeather?.weather)
         
         var currentWeather = cityWeather?.weather
@@ -67,19 +66,18 @@ class CoreDataTests: XCTestCase {
         XCTAssertEqual(wind?.deg, 308)
         XCTAssertEqual(cityWeather?.dt, 1463308797)
         
-        CDM.sharedInstance.saveContext()
+        coreDataManager.saveContext()
         count = coreDataManager.managedObjectContext.countForFetchRequest(fetch, error: &error)
         
         XCTAssertEqual(count, 1, "There must be 1 CityWather object")
-        // Delete all items from core data
-        // check they're gone
+        // Check fetch
         do {
-            let items = try CDM.sharedInstance.managedObjectContext.executeFetchRequest(fetch)
+            let items = try coreDataManager.managedObjectContext.executeFetchRequest(fetch)
             
             cityWeather = items.first as? CityWeather
             XCTAssertNotNil(cityWeather, "Inserted object isn't a CityWather object")
             XCTAssertEqual(cityWeather?.name, "London")
-            XCTAssertEqual(cityWeather?.id, 2643743)
+            XCTAssertEqual(cityWeather?.id, id)
             XCTAssertNotNil(cityWeather?.weather)
             
             currentWeather = cityWeather?.weather
@@ -100,15 +98,21 @@ class CoreDataTests: XCTestCase {
         }
         
         // Delete CityWeather item, weather and wind items should cascade and be deleted automatically
-        CDM.sharedInstance.managedObjectContext.deleteObject(cityWeather!)
-        CDM.sharedInstance.saveContext()
+        if cityWeather != nil {
+            coreDataManager.managedObjectContext.deleteObject(cityWeather!)
+            coreDataManager.saveContext()
+        } else {
+            XCTFail("City weather object is nil!")
+        }
         
-        var req = NSFetchRequest(entityName: "CityWeather")
-        XCTAssertEqual(CDM.sharedInstance.managedObjectContext.countForFetchRequest(req, error: nil), 0)
-        req = NSFetchRequest(entityName: "Weather")
-        XCTAssertEqual(CDM.sharedInstance.managedObjectContext.countForFetchRequest(req, error: nil), 0)
+        
+        XCTAssertEqual(coreDataManager.managedObjectContext.countForFetchRequest(fetch, error: nil), 0)
+        var req = NSFetchRequest(entityName: "Weather")
+        req.predicate = NSPredicate(format: "cityWeather.id == %d", id)
+        XCTAssertEqual(coreDataManager.managedObjectContext.countForFetchRequest(fetch, error: nil), 0)
         req = NSFetchRequest(entityName: "Wind")
-        XCTAssertEqual(CDM.sharedInstance.managedObjectContext.countForFetchRequest(req, error: nil), 0)
+        req.predicate = NSPredicate(format: "cityWeather.id == %d", id)
+        XCTAssertEqual(coreDataManager.managedObjectContext.countForFetchRequest(fetch, error: nil), 0)
         
         
     }
